@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sbb
+      POSTGRES_PASSWORD: sbb
+      POSTGRES_DB: sbb
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sbb -d sbb"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sbb:sbb@db:5432/sbb
+      DATA_DIR: /app/Daten
+      AUTO_INGEST: "true"
+      # GEMINI_* settings come from .env (env_file above), so a leftover PowerShell variable cannot override them.
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      # Point DATEN_PATH at your SBB "Daten" folder, e.g. DATEN_PATH=C:/Users/me/Downloads/Daten
+      - ${DATEN_PATH:-./Daten}:/app/Daten:ro
+
+volumes:
+  pgdata:

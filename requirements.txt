@@ -1,0 +1,15 @@
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+pydantic==2.14.4
+pydantic-settings==2.16.3
+SQLAlchemy[asyncio]==2.1.9
+asyncpg==0.32.0
+google-genai==3.6.1
+pandas==3.1.1
+openpyxl==3.1.5
+chardet==7.7.0
+python-dotenv==1.2.4
+tzdata>=2025.2
+httpx==0.28.1
+# tests
+pytest>=8
