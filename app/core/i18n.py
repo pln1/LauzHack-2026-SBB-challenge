@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 LANGS = ("en", "de", "fr", "it")
@@ -28,36 +29,40 @@ STATUS_LABELS = {
 SBB_LINKS = {
     "en": {
         "timetable": "https://www.sbb.ch/en",
-        "traffic": "https://www.sbb.ch/en/travel-information/rail-traffic-information.html",
-        "refund": "https://www.sbb.ch/en/help-and-contact/refunds-compensation.html",
+        "traffic": "https://www.sbb.ch/en/plan/rail-traffic-information?poiid=1283280",
+        "refund": "https://www.sbb.ch/en/help-and-contact/refunds-compensation/refunds-compensation/compensation-for-delays.html",
     },
     "de": {
         "timetable": "https://www.sbb.ch/de",
-        "traffic": "https://www.sbb.ch/de/reiseinformationen/bahnverkehrsinformationen.html",
-        "refund": "https://www.sbb.ch/de/hilfe-und-kontakt/erstattung-entschaedigung.html",
+        "traffic": "https://www.sbb.ch/de/reiseinformationen/bahnverkehrsinfo/betriebslage-stoerungen.html?poiid=719144",
+        "refund": "https://www.sbb.ch/de/hilfe-und-kontakt/erstattung-entschaedigung/rueckerstattung/entschaedigung-bei-verspaetung.html",
     },
     "fr": {
         "timetable": "https://www.sbb.ch/fr",
-        "traffic": "https://www.sbb.ch/fr/informations-voyages/informations-trafic-ferroviaire.html",
-        "refund": "https://www.sbb.ch/fr/aide-et-contact/remboursement-indemnisation.html",
+        "traffic": "https://www.sbb.ch/fr/planifier/information-trafic-ferroviaire?poiid=1274174",
+        "refund": "https://www.sbb.ch/fr/aide-et-contact/remboursement-indemnisation/remboursements-indemnisations/indemnisation-cas-retard.html",
     },
     "it": {
         "timetable": "https://www.sbb.ch/it",
-        "traffic": "https://www.sbb.ch/it/informazioni-di-viaggio/informazioni-sul-traffico-ferroviario.html",
-        "refund": "https://www.sbb.ch/it/aiuto-e-contatto/rimborso-indennizzo.html",
+        "traffic": "https://www.sbb.ch/it/pianificare/informazioni-traffico-ferroviario?poiid=1256950",
+        "refund": "https://www.sbb.ch/it/aiuto-e-contatto/rimborso-indennita/rimborsi-indennita/indennita-caso-ritardo.html",
     },
 }
 
 LINK_LABELS = {
-    "timetable": {"en": "Check SBB Timetable ↗", "de": "Im SBB Fahrplan prüfen ↗", "fr": "Vérifier dans l’horaire CFF ↗", "it": "Controlla nell’orario FFS ↗"},
+    "timetable": {"en": "Search route in SBB timetable ↗", "de": "Strecke im SBB Fahrplan suchen ↗", "fr": "Chercher le trajet dans l’horaire CFF ↗", "it": "Cerca il percorso nell’orario FFS ↗"},
     "traffic": {"en": "Official SBB live status ↗", "de": "Offizielle SBB Betriebslage ↗", "fr": "Info trafic officielle CFF ↗", "it": "Info traffico ufficiale FFS ↗"},
-    "refund": {"en": "Claim refund on SBB.ch ↗", "de": "Rückerstattung auf SBB.ch ↗", "fr": "Demander un remboursement CFF ↗", "it": "Richiedi rimborso su FFS.ch ↗"},
+    "refund": {"en": "Delay compensation on SBB.ch ↗", "de": "Entschädigung bei Verspätung ↗", "fr": "Indemnisation en cas de retard ↗", "it": "Indennità in caso di ritardo ↗"},
 }
 
 
-def sbb_link(kind: str, lang: str) -> dict:
+def sbb_link(kind: str, lang: str, origin: str | None = None, destination: str | None = None) -> dict:
     lang = norm_lang(lang)
-    return {"type": "sbb_link", "kind": kind, "url": SBB_LINKS[lang][kind], "label": LINK_LABELS[kind][lang]}
+    url = SBB_LINKS[lang][kind]
+    if kind == "timetable" and origin and destination:
+        url += "&" if "?" in url else "?"
+        url += urlencode({"von": origin, "nach": destination})
+    return {"type": "sbb_link", "kind": kind, "url": url, "label": LINK_LABELS[kind][lang]}
 
 
 UNCERTAIN_DURATIONS = {"UNKNOWN", "UNTIL_AT_LEAST", "UNTIL_AT_LEAST_DATE_TIME", "NONE"}

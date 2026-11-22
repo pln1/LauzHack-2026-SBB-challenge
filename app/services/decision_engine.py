@@ -58,6 +58,13 @@ class DecisionContext:
         return (self.incident.map_geometry or {}).get("detourRoute") or None
 
 
+def timetable_link(ctx: DecisionContext) -> dict:
+    stations = ctx.incident.affected_stations or []
+    origin = ctx.trip_context.get("origin") or (stations[0] if stations else None)
+    destination = ctx.trip_context.get("destination") or (stations[-1] if len(stations) > 1 else None)
+    return sbb_link("timetable", ctx.lang, origin, destination)
+
+
 @dataclass
 class DecisionResult:
     scenario: str
@@ -254,7 +261,7 @@ class ScenarioStrategy(ABC):
         """Return (steps, policy_facts that must survive LLM rewriting)."""
 
     def links(self, ctx: DecisionContext) -> list[dict]:
-        return [sbb_link("timetable", ctx.lang)]
+        return [timetable_link(ctx)]
 
     def build(self, ctx: DecisionContext) -> DecisionResult:
         steps, facts = self.steps(ctx)
@@ -309,7 +316,7 @@ class DetourRouteStrategy(ScenarioStrategy):
         return steps, []
 
     def links(self, ctx):
-        return [sbb_link("timetable", ctx.lang), sbb_link("traffic", ctx.lang)]
+        return [timetable_link(ctx), sbb_link("traffic", ctx.lang)]
 
 
 class RefundCompensationStrategy(ScenarioStrategy):
