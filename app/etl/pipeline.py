@@ -554,7 +554,7 @@ def _map_geometry(stations: list[Station], detour, approx_note: str | None = Non
         "waypoints": pts,
         "from": pts[0] if pts else None,
         "to": pts[-1] if pts else None,
-        "stations": [{"name": s.name, "lat": s.lat, "lng": s.lng} for s in stations],
+        "stations": [{"name": s.name, "uic": s.code, "lat": s.lat, "lng": s.lng} for s in stations],
         "detourRoute": detour,
         "approximate": False,
     }

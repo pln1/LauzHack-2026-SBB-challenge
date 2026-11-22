@@ -502,22 +502,25 @@
       return state.incidents.find(i => i.id === state.selectedIncidentId) || (state.detail && state.detail.id === state.selectedIncidentId ? state.detail : null);
     }
 
+    // sbb.ch start page deep link, in the format sbb.ch writes itself:
+    //   ?stops=Bern+Wankdorf_I8516161~G%C3%BCmligen_I8507003&date=%222026-11-22%22&time=09_00&moment=dep&day=2026-09-01
+    // sbb.ch only plans today or later, so a past dataset day is planned for today at the same time of day; `day` keeps the
+    // incident's own date (same rule as the backend). Everything is percent-encoded exactly once.
     function officialTimetableUrl(inc) {
-      const url = new URL(t('sbbUrlBase'));
+      const base = t('sbbUrlBase');
       const stations = inc && inc.mapGeometry && inc.mapGeometry.stations || [];
-      const names = stations.map(station => typeof station === 'string' ? station : station && station.name).filter(Boolean);
-      if (names.length >= 2) {
-        url.searchParams.set('von', names[0]);
-        url.searchParams.set('nach', names[names.length - 1]);
-        const when = inc && inc.updatedAt ? new Date(inc.updatedAt) : null;   // same moment the cards show (live: now, dataset: its own day)
-        if (when && !isNaN(when)) {
-          const f = new Intl.DateTimeFormat('de-CH', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-          const p = Object.fromEntries(f.formatToParts(when).map(x => [x.type, x.value]));
-          url.searchParams.set('datum', `${p.day}.${p.month}.${p.year}`);
-          url.searchParams.set('zeit', `${p.hour}:${p.minute}`);
-        }
+      const list = stations.map(s => typeof s === 'string' ? { name: s } : s).filter(s => s && s.name);
+      if (list.length < 2) return base;
+      const stop = s => encodeURIComponent(s.name).replace(/%20/g, '+') + (s.uic ? '_I' + s.uic : '');
+      const q = ['stops=' + stop(list[0]) + '~' + stop(list[list.length - 1])];
+      const when = inc && inc.updatedAt ? new Date(inc.updatedAt) : null;   // same moment the cards show (live: now, dataset: its own day)
+      if (when && !isNaN(when)) {
+        const fmt = d => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Zurich', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(d).map(x => [x.type, x.value]));
+        const w = fmt(when), n = fmt(new Date());
+        const day = `${w.year}-${w.month}-${w.day}`, today = `${n.year}-${n.month}-${n.day}`;
+        q.push('date=%22' + (day < today ? today : day) + '%22', `time=${w.hour}_${w.minute}`, 'moment=dep', 'day=' + day);
       }
-      return url.toString();
+      return base + (base.includes('?') ? '&' : '?') + q.join('&');
     }
 
     function updateOfficialLinks(inc) {
@@ -575,8 +578,7 @@
       const set = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
       set('header-tagline', 'tagline'); set('mode-live-label', 'liveMode'); updateDatasetLabel();
       if (window.applyPanelLayout) applyPanelLayout();   // refresh the panel button/handle labels in the new language
-      set('sim-update-label', 'simUpdate'); set('toast-badge', 'toastBadge'); set('live-toast-action', 'toastAction');
-      document.querySelector('.simulate-control').setAttribute('aria-label', t('simUpdate'));
+      set('toast-badge', 'toastBadge'); set('live-toast-action', 'toastAction');
       set('kpi-active-title', 'kpiActiveTitle'); set('kpi-active-sub', 'kpiActiveSub'); set('kpi-bus-title', 'kpiBusTitle');
       set('kpi-bus-sub', 'kpiBusSub'); set('kpi-unknown-title', 'kpiUnknownTitle'); set('kpi-unknown-sub', 'kpiUnknownSub');
       set('kpi-resumed-title', 'kpiResumedTitle'); set('kpi-resumed-sub', 'kpiResumedSub');
@@ -821,29 +823,12 @@
       if (state.drawerOpen) await refreshDrawer(true);
     }
 
-    function pickSimulationTarget() {
-      const sel = currentIncident();
-      if (sel && sel.status !== 'RESUMED') return sel.id;
-      const queued = state.incidents.find(i => i.hasPendingUpdates && i.status !== 'RESUMED');
-      const open = state.incidents.find(i => i.status !== 'RESUMED');
-      return (queued || open || sel || {}).id;
-    }
-
     async function runSimulation(incidentId) {
       if (!incidentId) return null;
       const res = await api(`/incidents/${incidentId}/simulate-update?lang=${apiLang()}`, { method: 'POST' });
       showToast(res.incident, res.applied ? res.changeSummary : t('noUpdates'));
       await loadDashboard();
       return res;
-    }
-
-    async function simulateLiveUpdate() {
-      try {
-        const id = pickSimulationTarget();
-        const res = await runSimulation(id);
-        if (res) selectIncident(res.incident.id, true);
-        if (state.drawerOpen && res && res.incident.id === state.selectedIncidentId) await refreshDrawer(false);
-      } catch (e) { console.error('[SBB] simulate', e); }
     }
 
     function showToast(inc, text) {
@@ -1030,10 +1015,16 @@
           return `<button data-detour="${payload}" onclick="triggerDetourFromChat(this.dataset.detour)" class="${pad} rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-xs">${escapeHtml(w.label)}</button>`;
         }
         if (w.type === 'sbb_link') {
-          return `<a href="${encodeURI(w.url)}" target="_blank" rel="noopener noreferrer" class="${pad} rounded-xl ${big ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'bg-white hover:bg-slate-100 text-slate-800 border border-slate-300'} font-bold transition">${escapeHtml(w.label)}</a>`;
+          return `<a href="${attrUrl(w.url)}" target="_blank" rel="noopener noreferrer" class="${pad} rounded-xl ${big ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'bg-white hover:bg-slate-100 text-slate-800 border border-slate-300'} font-bold transition">${escapeHtml(w.label)}</a>`;
         }
         return '';
       }).join('');
+    }
+
+    // backend links are already percent-encoded exactly once: only make them safe inside an HTML attribute, never re-encode
+    function attrUrl(u) {
+      const s = String(u || '');
+      return /^https:\/\//i.test(s) ? s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '%3C').replace(/>/g, '%3E') : '#';
     }
 
     function renderMessage(m) {

@@ -1,8 +1,9 @@
 """Localized labels, official sbb.ch links and forecast formatting (EN/DE/FR/IT)."""
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
-from urllib.parse import urlencode
+from urllib.parse import quote, quote_plus, urlencode
 from zoneinfo import ZoneInfo
 from app.core.resources import load_resource
 
@@ -29,19 +30,39 @@ SBB_LINKS = _R["SBB_LINKS"]
 LINK_LABELS = _R["LINK_LABELS"]
 
 
+def timetable_moment(when: datetime | None, now: datetime | None = None) -> tuple[str, str, str] | None:
+    """(date to plan, time, original day) to pre-fill on sbb.ch. SBB's planner only accepts today or later, so a past
+    moment (dataset incidents belong to Sept 2026) keeps its time of day but is planned for today; a future moment is kept.
+    The third value is always the incident's own day."""
+    if when is None:
+        return None
+    local, today = when.astimezone(TZ), (now or datetime.now(TZ)).astimezone(TZ)
+    day = local.date() if local.date() >= today.date() else today.date()
+    return day.strftime("%Y-%m-%d"), local.strftime("%H:%M"), local.strftime("%Y-%m-%d")
+
+
+def timetable_query(origin: str, destination: str, when: datetime | None = None, origin_id: str | None = None,
+                    destination_id: str | None = None) -> str:
+    """Query string in the format sbb.ch writes itself, e.g.
+    ``stops=Bern+Wankdorf_I8516161~G%C3%BCmligen_I8507003&date=%222026-11-22%22&time=09_00&moment=dep&day=2026-09-01``.
+    Each stop is ``Name_I<UIC>`` (just the name when the id is unknown), joined by ``~``; everything is percent-encoded once."""
+    def stop(name: str, uic: str | None) -> str:
+        return quote_plus(name) + (f"_I{uic}" if uic else "")
+    parts = [f"stops={stop(origin, origin_id)}~{stop(destination, destination_id)}"]
+    m = timetable_moment(when)
+    if m:
+        parts += [f"date={quote(chr(34) + m[0] + chr(34))}", f"time={m[1].replace(':', '_')}", "moment=dep", f"day={m[2]}"]
+    return "&".join(parts)
+
+
 def sbb_link(kind: str, lang: str, origin: str | None = None, destination: str | None = None,
-             when: datetime | None = None) -> dict:
-    """Official sbb.ch link. A timetable link carries the date and time the app shows for the incident (``when``: the
-    incident's own, already shifted, reference time) so SBB.ch opens on the same moment, not on the browser's "now"."""
+             when: datetime | None = None, origin_id: str | None = None, destination_id: str | None = None) -> dict:
+    """Official sbb.ch link. A timetable link carries both stations and the incident's date/time (see ``timetable_moment``)
+    so SBB.ch opens on that connection instead of the browser's "now"."""
     lang = norm_lang(lang)
     url = SBB_LINKS[lang][kind]
     if kind == "timetable" and origin and destination:
-        q = {"von": origin, "nach": destination}
-        if when is not None:
-            local = when.astimezone(TZ)
-            q.update({"datum": local.strftime("%d.%m.%Y"), "zeit": local.strftime("%H:%M")})
-        url += "&" if "?" in url else "?"
-        url += urlencode(q)
+        url += ("&" if "?" in url else "?") + timetable_query(origin, destination, when, origin_id, destination_id)
     return {"type": "sbb_link", "kind": kind, "url": url, "label": LINK_LABELS[kind][lang]}
 
 

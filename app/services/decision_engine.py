@@ -63,7 +63,9 @@ def timetable_link(ctx: DecisionContext) -> dict:
     stations = ctx.incident.affected_stations or []
     origin = ctx.trip_context.get("origin") or (stations[0] if stations else None)
     destination = ctx.trip_context.get("destination") or (stations[-1] if len(stations) > 1 else None)
-    return sbb_link("timetable", ctx.lang, origin, destination, when=getattr(ctx.incident, "updated_at", None))
+    ids = {st.get("name"): st.get("uic") for st in ((getattr(ctx.incident, "map_geometry", None) or {}).get("stations") or []) if isinstance(st, dict)}
+    return sbb_link("timetable", ctx.lang, origin, destination, when=getattr(ctx.incident, "updated_at", None),
+                    origin_id=ids.get(origin), destination_id=ids.get(destination))
 
 
 @dataclass

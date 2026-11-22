@@ -209,8 +209,6 @@
     html.dark-theme:not(.accessibility-contrast) .station-label { background: rgba(32,37,41,.94); color: #f1f3f4; border-color: #566168; }
     @media (max-width: 1180px) {
       .header-subtitle { display: none !important; }
-      #sim-update-label { display: none; }
-      .simulate-control { padding-left: 10px; padding-right: 10px; }
       .brand-block { flex-basis: 190px; min-width: 150px; max-width: 190px; }
       #app-header .header-controls { gap: 6px; }
     }

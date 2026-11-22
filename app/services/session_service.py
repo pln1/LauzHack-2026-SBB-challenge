@@ -17,6 +17,7 @@ from app.db.session import get_sessionmaker
 from app.schemas.dtos import AssistantTurnDto, ChatMessageDto, SessionDto, TripContext
 from app.services import incident_service as isvc
 from app.services.decision_engine import DecisionContext, DecisionResult, get_engine
+from app.core.legacy_links import upgrade_timetable_url
 from app.core.resources import load_resource
 
 log = logging.getLogger("sessions")
@@ -33,8 +34,18 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _upgraded(widgets: list | None) -> list:
+    """Chat messages keep their widgets in the DB: links written by older builds are rewritten to the current sbb.ch format."""
+    out = []
+    for w in widgets or []:
+        if isinstance(w, dict) and w.get("type") == "sbb_link" and w.get("kind") == "timetable" and w.get("url"):
+            w = {**w, "url": upgrade_timetable_url(w["url"])}
+        out.append(w)
+    return out
+
+
 def msg_dto(m: ChatMessage) -> ChatMessageDto:
-    return ChatMessageDto(id=m.id, sender=m.sender, content=m.content, widgets=m.widgets or [], created_at=m.created_at)
+    return ChatMessageDto(id=m.id, sender=m.sender, content=m.content, widgets=_upgraded(m.widgets), created_at=m.created_at)
 
 
 def _ttl() -> timedelta:
