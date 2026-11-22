@@ -45,7 +45,7 @@
       IT: ['Accessibilità', 'Visualizzazione e accessibilità', 'Testo più grande', 'Contrasto elevato', 'Le impostazioni vengono salvate su questo dispositivo. Il supporto per tastiera e lettori di schermo è sempre disponibile.', 'Vai al contenuto principale', 'Premi Invio o Spazio per selezionare questo guasto sulla mappa.']
     };
     const POOR_VISION_LABELS = {
-      EN: ['Poor vision mode', 'Poor vision mode on', 'Turn on poor vision mode', 'Turn off poor vision mode'],
+      EN: ['Low vision mode', 'Low vision mode on', 'Turn on low vision mode', 'Turn off low vision mode'],
       DE: ['Sehhilfemodus', 'Sehhilfemodus aktiv', 'Sehhilfemodus einschalten', 'Sehhilfemodus ausschalten'],
       FR: ['Mode basse vision', 'Mode basse vision activé', 'Activer le mode basse vision', 'Désactiver le mode basse vision'],
       IT: ['Modalità ipovisione', 'Modalità ipovisione attiva', 'Attiva modalità ipovisione', 'Disattiva modalità ipovisione']
