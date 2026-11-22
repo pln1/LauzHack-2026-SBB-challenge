@@ -89,6 +89,7 @@
     // =========================================================================
     window.addEventListener('DOMContentLoaded', async () => {
       await loadI18n();
+      initDateFilter();
       applyAccessibilitySettings();
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && !document.getElementById('accessibility-panel').classList.contains('hidden')) {
@@ -141,8 +142,11 @@
 
     function applyAccessibilityLabels() {
       const labels = ACCESSIBILITY_LABELS[state.lang] || ACCESSIBILITY_LABELS.EN;
-      ['accessibility-toggle', 'accessibility-heading', 'accessibility-large-label', 'accessibility-contrast-label', 'accessibility-help', 'skip-main']
-        .forEach((id, i) => { document.getElementById(id).textContent = labels[i]; });
+      const toggle = document.getElementById('accessibility-toggle');
+      toggle.setAttribute('aria-label', labels[0]);
+      document.getElementById('accessibility-toggle-label').textContent = labels[0];
+      ['accessibility-heading', 'accessibility-large-label', 'accessibility-contrast-label', 'accessibility-help', 'skip-main']
+        .forEach((id, i) => { document.getElementById(id).textContent = labels[i + 1]; });
     }
 
     const SWISS_BOUNDS = [[45.80, 5.90], [47.85, 10.55]];
@@ -566,7 +570,7 @@
       set('header-tagline', 'tagline'); set('mode-live-label', 'liveMode'); updateDatasetLabel();
       if (window.applyPanelLayout) applyPanelLayout();   // refresh the panel button/handle labels in the new language
       set('sim-update-label', 'simUpdate'); set('toast-badge', 'toastBadge'); set('live-toast-action', 'toastAction');
-      set('nav-disruptions', 'serviceNavDisruptions'); set('nav-map', 'serviceNavMap');
+      document.querySelector('.simulate-control').setAttribute('aria-label', t('simUpdate'));
       set('kpi-active-title', 'kpiActiveTitle'); set('kpi-active-sub', 'kpiActiveSub'); set('kpi-bus-title', 'kpiBusTitle');
       set('kpi-bus-sub', 'kpiBusSub'); set('kpi-unknown-title', 'kpiUnknownTitle'); set('kpi-unknown-sub', 'kpiUnknownSub');
       set('kpi-resumed-title', 'kpiResumedTitle'); set('kpi-resumed-sub', 'kpiResumedSub');
@@ -603,6 +607,9 @@
       set('chat-send-btn', 'chatSendBtn');
       const allDays = document.querySelector('#date-select option[value=""]');
       if (allDays) allDays.textContent = t('allDays');
+      const options = document.getElementById('date-filter-options');
+      if (options) options.setAttribute('aria-label', t('dateFilterLabel'));
+      updateDateFilterSelection();
     }
 
     function setStatusFilter(filter) {
@@ -656,6 +663,7 @@
       document.getElementById('clear-search-btn').classList.add('hidden');
       state.dateFilter = '';
       const ds = document.getElementById('date-select'); if (ds) ds.value = '';
+      updateDateFilterSelection();
       setStatusFilter('ALL');
     }
 
@@ -672,7 +680,11 @@
       const el = document.getElementById('mode-demo-label');
       if (!el) return;
       const r = datasetRangeText(state.datasetDates);
-      el.textContent = r ? t('demoModeRange').replace('{range}', r) : t('demoMode');
+      const label = r ? t('demoModeRange').replace('{range}', r) : t('demoMode');
+      el.textContent = label;
+      const button = document.getElementById('mode-demo-btn');
+      button.setAttribute('aria-label', label);
+      button.title = label;
     }
     async function loadDatasetDates() {
       try { state.datasetDates = (await api(`/incidents?mode=dataset&limit=1&lang=${apiLang()}`)).availableDates || []; updateDatasetLabel(); }
@@ -686,11 +698,94 @@
       const current = state.dateFilter;
       sel.innerHTML = `<option value="">${escapeHtml(t('allDays'))}</option>` +
         dates.map(d => `<option value="${d}" ${d === current ? 'selected' : ''}>${d.split('-').reverse().join('.')}</option>`).join('');
+      const list = document.getElementById('date-filter-options');
+      if (!list) return;
+      const options = [{ value: '', label: t('allDays') }, ...dates.map(d => ({ value: d, label: d.split('-').reverse().join('.') }))];
+      list.innerHTML = options.map(({ value, label }) =>
+        `<div class="date-filter-option" role="option" tabindex="-1" data-date="${escapeHtml(value)}" aria-selected="${value === current}">${escapeHtml(label)}</div>`
+      ).join('');
+      updateDateFilterSelection();
     }
 
     function setDateFilter(value) {
       state.dateFilter = value;
+      const sel = document.getElementById('date-select'); if (sel) sel.value = value;
+      updateDateFilterSelection();
+      closeDateFilter(true);
       loadDashboard(true);
+    }
+
+    function initDateFilter() {
+      const control = document.getElementById('date-filter-control');
+      const trigger = document.getElementById('date-filter-trigger');
+      const list = document.getElementById('date-filter-options');
+      if (!control || !trigger || !list) return;
+      trigger.addEventListener('click', () => list.classList.contains('hidden') ? openDateFilter() : closeDateFilter());
+      list.addEventListener('click', event => {
+        const option = event.target.closest('[data-date]');
+        if (option) setDateFilter(option.dataset.date);
+      });
+      trigger.addEventListener('keydown', event => {
+        if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(event.key)) {
+          event.preventDefault();
+          if (list.classList.contains('hidden')) openDateFilter();
+          else focusDateOption(event.key === 'ArrowUp' ? -1 : 1);
+        }
+      });
+      list.addEventListener('keydown', event => {
+        const options = [...list.querySelectorAll('[role="option"]')];
+        const index = options.indexOf(document.activeElement);
+        if (event.key === 'Escape') { event.preventDefault(); closeDateFilter(true); }
+        else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault(); options[(index + (event.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length]?.focus();
+        } else if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault(); (event.key === 'Home' ? options[0] : options.at(-1))?.focus();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault(); const option = options[index]; if (option) setDateFilter(option.dataset.date);
+        }
+      });
+      document.addEventListener('click', event => { if (!control.contains(event.target)) closeDateFilter(); });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape' && !list.classList.contains('hidden')) closeDateFilter(true); });
+    }
+
+    function openDateFilter() {
+      const trigger = document.getElementById('date-filter-trigger');
+      const list = document.getElementById('date-filter-options');
+      list.classList.remove('hidden');
+      trigger.setAttribute('aria-expanded', 'true');
+      const selected = list.querySelector('[aria-selected="true"]') || list.querySelector('[role="option"]');
+      selected?.focus();
+      selected?.scrollIntoView({ block: 'nearest' });
+    }
+
+    function closeDateFilter(returnFocus = false) {
+      const trigger = document.getElementById('date-filter-trigger');
+      const list = document.getElementById('date-filter-options');
+      if (!trigger || !list) return;
+      const wasOpen = !list.classList.contains('hidden');
+      list.classList.add('hidden');
+      trigger.setAttribute('aria-expanded', 'false');
+      if (returnFocus && wasOpen) trigger.focus();
+    }
+
+    function focusDateOption(direction) {
+      const options = [...document.querySelectorAll('#date-filter-options [role="option"]')];
+      const selected = options.findIndex(option => option.getAttribute('aria-selected') === 'true');
+      options[Math.max(0, Math.min(options.length - 1, selected + direction))]?.focus();
+    }
+
+    function updateDateFilterSelection() {
+      const label = document.getElementById('date-filter-label');
+      const trigger = document.getElementById('date-filter-trigger');
+      const options = document.querySelectorAll('#date-filter-options [role="option"]');
+      let selectedLabel = t('allDays');
+      options.forEach(option => {
+        const selected = option.dataset.date === state.dateFilter;
+        option.setAttribute('aria-selected', String(selected));
+        if (selected) selectedLabel = option.textContent;
+      });
+      if (label) label.textContent = selectedLabel;
+      if (trigger) trigger.setAttribute('aria-label', `${t('dateFilterLabel')}: ${selectedLabel}`);
     }
 
     function setDataMode(mode) {
@@ -704,7 +799,7 @@
         demoBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm';
         liveBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
       }
-      document.getElementById('date-select').classList.toggle('hidden', state.dataMode !== 'dataset');
+      document.getElementById('date-filter-control').classList.toggle('hidden', state.dataMode !== 'dataset');
       applyStaticTranslations();
       resetMapView();
       loadDashboard(true);

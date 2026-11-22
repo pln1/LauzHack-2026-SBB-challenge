@@ -111,5 +111,6 @@
   "panelDockTitle": "Riporta l’elenco accanto alla mappa",
   "panelResizeTitle": "Trascina per ridimensionare",
   "panelHandleTitle": "Trascina per spostare",
-  "demoModeRange": "Dati: {range}"
+  "demoModeRange": "Dati: {range}",
+  "dateFilterLabel": "Scegli la data del dataset"
 }

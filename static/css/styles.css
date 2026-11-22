@@ -39,8 +39,14 @@
       font-family: "SBB", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
     #app-header { border-top: 4px solid var(--sbb-brand-red); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-    .sbb-section-link { display: inline-flex; align-items: center; min-height: 42px; padding: 0 12px; border-bottom: 3px solid transparent; color: var(--sbb-charcoal); font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; }
-    .sbb-section-link:hover, .sbb-section-link:focus-visible { color: var(--sbb-brand-red); border-bottom-color: var(--sbb-brand-red); }
+    .header-main-row { min-height: 76px; gap: 12px; }
+    .brand-block { flex: 1 1 auto; max-width: 48%; }
+    .brand-copy, .header-title { min-width: 0; }
+    .header-controls { flex: 0 1 auto; max-width: 68%; overflow: visible; white-space: nowrap; }
+    .header-controls::-webkit-scrollbar { display: none; }
+    .header-control { flex-shrink: 0; white-space: nowrap; }
+    .mode-live-label, #mode-live-label, #mode-demo-label { white-space: nowrap; }
+    .accessibility-control { position: relative; }
     main > section, #incidents-list article, #swiss-map + * { border-color: var(--sbb-cloud); }
     #sbb-timetable-link { background: var(--sbb-brand-red); color: #fff; border-radius: 9999px; }
     #sbb-timetable-link:hover { background: #C60000; }
@@ -200,8 +206,47 @@
     html.dark-theme:not(.accessibility-contrast) #map-note { background: rgba(32,37,41,.97) !important; color: #f1f3f4 !important; border-color: #566168 !important; }
     html.dark-theme:not(.accessibility-contrast) #swiss-map .leaflet-control-attribution { background: rgba(32,37,41,.9); color: #e2e6e8; }
     html.dark-theme:not(.accessibility-contrast) .station-label { background: rgba(32,37,41,.94); color: #f1f3f4; border-color: #566168; }
-    html.dark-theme:not(.accessibility-contrast) .sbb-section-link { color: #f1f3f4; }
-    html.dark-theme:not(.accessibility-contrast) .sbb-section-link:hover { color: #ff5252; }
+    @media (max-width: 1180px) {
+      .header-subtitle { display: none !important; }
+      #sim-update-label { display: none; }
+      .simulate-control { padding-left: 10px; padding-right: 10px; }
+      .brand-block { max-width: 40%; }
+      .header-controls { gap: 8px; }
+    }
+    @media (max-width: 960px) {
+      .decision-badge { display: none !important; }
+      .data-mode-control button { min-height: 36px; padding-left: 9px; padding-right: 9px; }
+      .language-control .lang-btn { min-width: 32px; min-height: 36px; padding-left: 6px; padding-right: 6px; }
+      .header-controls { gap: 6px; }
+    }
+    @media (max-width: 800px) {
+      .brand-block { flex: 0 0 250px; max-width: none; min-width: 0; }
+      .brand-block { gap: 8px; }
+      .brand-block img { height: 28px; max-width: 52px; }
+      .header-title { font-size: 13px; }
+      .header-controls { flex: 1 1 0; width: 0; max-width: none; min-width: 0; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #94A3B8 transparent; }
+      .header-controls::-webkit-scrollbar { display: block; height: 3px; }
+      .header-controls::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 9999px; }
+      #mode-demo-label { font-size: 0; }
+      #mode-demo-label::after { content: "Demo"; font-size: 11px; }
+      .header-main-row { gap: 8px; padding-left: 12px; padding-right: 12px; }
+      .accessibility-panel { position: fixed; top: 4.5rem; right: 10px; }
+    }
+    @media (max-width: 760px) {
+      #accessibility-toggle { width: 44px; min-height: 44px; padding: 0; }
+      #accessibility-toggle-label { display: none; }
+      .data-mode-control button { font-size: 11px; }
+      .theme-toggle-btn { width: 40px; height: 40px; }
+      .brand-block { gap: 8px; }
+      .brand-block img { height: 28px; max-width: 52px; }
+      .header-title { font-size: 13px; }
+    }
+    @media (max-width: 640px) {
+      .header-main-row { min-height: 64px; gap: 8px; padding-left: 10px; padding-right: 10px; }
+      .brand-block { flex: 0 1 38vw; width: 38vw; max-width: 230px; min-width: 126px; }
+      .header-controls { flex: 1 1 0; width: 0; max-width: none; min-width: 0; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain; }
+      .header-title { font-size: 12px; }
+    }
     @media (max-width: 1023px) {
       #map-section { order: -1; }
       #map-selected-shell { grid-row: 1; }
@@ -247,6 +292,34 @@
     }
     @media (max-width: 1023px) { #panel-float-btn, #panel-splitter { display: none !important; } }
     html.dark-theme:not(.accessibility-contrast) .list-panel.is-floating { background: #15191c; border-color: #3c4043; }
+
+    /* Custom dataset date picker: keeps the native OS menu from covering the map. */
+    .date-filter-control { position: relative; flex: 0 0 auto; z-index: 45; }
+    .date-filter-trigger { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; min-width: 154px; max-width: min(240px, 42vw); padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 12px; background: #fff; color: #1f2937; font-size: 13px; font-weight: 650; white-space: nowrap; cursor: pointer; box-shadow: 0 1px 2px rgba(15,23,42,.05); }
+    .date-filter-trigger:hover { border-color: #eb0000; background: #fffafa; }
+    .date-filter-trigger:focus-visible, .date-filter-option:focus-visible { outline: 3px solid #005fcc; outline-offset: 2px; }
+    .date-filter-trigger > svg:first-child { width: 17px; height: 17px; flex: 0 0 auto; stroke: #c60000; stroke-width: 1.8; }
+    .date-filter-trigger #date-filter-label { overflow: hidden; text-overflow: ellipsis; }
+    .date-filter-chevron { width: 16px; height: 16px; flex: 0 0 auto; margin-left: auto; stroke: currentColor; stroke-width: 1.8; transition: transform 160ms ease; }
+    .date-filter-trigger[aria-expanded="true"] .date-filter-chevron { transform: rotate(180deg); }
+    .date-filter-menu { position: absolute; top: calc(100% + 7px); left: 0; width: max(100%, 190px); max-height: min(320px, 55vh); overflow-y: auto; overscroll-behavior: contain; padding: 5px; border: 1px solid #d7dde0; border-radius: 14px; background: #fff; box-shadow: 0 14px 36px rgba(15,23,42,.2); }
+    .date-filter-option { display: flex; align-items: center; min-height: 42px; padding: 0 11px; border-radius: 9px; color: #263238; font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
+    .date-filter-option:hover { background: #f4f6f7; }
+    .date-filter-option[aria-selected="true"] { background: #fff0f0; color: #a90000; font-weight: 750; }
+    .date-filter-option[aria-selected="true"]::after { content: "✓"; margin-left: auto; font-size: 14px; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-trigger { background: #202529; border-color: #566168; color: #f1f3f4; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-trigger:hover { background: #2b2425; border-color: #ff7676; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-menu { background: #202529; border-color: #566168; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-option { color: #f1f3f4; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-option:hover { background: #30383d; }
+    html.dark-theme:not(.accessibility-contrast) .date-filter-option[aria-selected="true"] { background: #45282b; color: #ff9292; }
+    html.accessibility-contrast .date-filter-trigger, html.accessibility-contrast .date-filter-menu { border: 2px solid #111; }
+    html.accessibility-contrast .date-filter-option[aria-selected="true"] { background: #fff; color: #8b0000; outline: 2px solid #8b0000; }
+    @media (max-width: 640px) {
+      .date-filter-control { width: 100%; }
+      .date-filter-trigger { width: 100%; max-width: none; justify-content: flex-start; }
+      .date-filter-menu { width: 100%; }
+    }
 
     /* ---- docked list: fixed width; its height follows the right column (set by panel.js), own scroll bar ---- */
     @media (min-width: 1024px) {

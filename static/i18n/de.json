@@ -111,5 +111,6 @@
   "panelDockTitle": "Liste wieder neben der Karte andocken",
   "panelResizeTitle": "Ziehen, um die Grösse zu ändern",
   "panelHandleTitle": "Ziehen zum Verschieben",
-  "demoModeRange": "Datensatz: {range}"
+  "demoModeRange": "Datensatz: {range}",
+  "dateFilterLabel": "Datumsfilter wählen"
 }

@@ -111,5 +111,6 @@
   "panelDockTitle": "Put the list back next to the map",
   "panelResizeTitle": "Drag to resize",
   "panelHandleTitle": "Drag to move",
-  "demoModeRange": "Dataset: {range}"
+  "demoModeRange": "Dataset: {range}",
+  "dateFilterLabel": "Choose dataset date"
 }

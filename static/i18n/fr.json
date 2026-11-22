@@ -111,5 +111,6 @@
   "panelDockTitle": "Remettre la liste à côté de la carte",
   "panelResizeTitle": "Glisser pour redimensionner",
   "panelHandleTitle": "Glisser pour déplacer",
-  "demoModeRange": "Jeu de données : {range}"
+  "demoModeRange": "Jeu de données : {range}",
+  "dateFilterLabel": "Choisir une date du jeu de données"
 }
