@@ -1,4 +1,5 @@
 """FastAPI application entry point."""
+
 from __future__ import annotations
 
 import asyncio
@@ -33,9 +34,14 @@ async def _auto_ingest() -> None:
         if await incident_count(db) > 0:
             return
         if not Path(settings.data_dir).exists():
-            log.warning("database empty and DATA_DIR missing; run scripts/ingest_data.py", extra={"data_dir": str(settings.data_dir)})
+            log.warning(
+                "database empty and DATA_DIR missing; run scripts/ingest_data.py",
+                extra={"data_dir": str(settings.data_dir)},
+            )
             return
-        log.info("database empty: running ETL", extra={"data_dir": str(settings.data_dir)})
+        log.info(
+            "database empty: running ETL", extra={"data_dir": str(settings.data_dir)}
+        )
         await run_ingest(db, settings, get_station_index())
 
 
@@ -63,8 +69,15 @@ async def lifespan(app: FastAPI):
         except Exception:  # noqa: BLE001 - the API should still come up
             log.exception("auto-ingest failed")
     gem = get_gemini_service().status()
-    log.info("startup", extra={"gemini_configured": gem["configured"], "gemini_model": gem["model"],
-                               "gemini_timeout_s": gem["timeoutSeconds"], "gemini_thinking": gem["thinkingLevel"]})
+    log.info(
+        "startup",
+        extra={
+            "gemini_configured": gem["configured"],
+            "gemini_model": gem["model"],
+            "gemini_timeout_s": gem["timeoutSeconds"],
+            "gemini_thinking": gem["thinkingLevel"],
+        },
+    )
     task = asyncio.create_task(_cleanup_loop())
     yield
     task.cancel()
@@ -79,8 +92,12 @@ app = FastAPI(
     description="Turns SBB disruption data (public live ticker, internal KULT ticker, VIA) into a passenger's next move.",
     lifespan=lifespan,
 )
-app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in get_settings().cors_origins.split(",")],
-                   allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in get_settings().cors_origins.split(",")],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
@@ -88,8 +105,15 @@ async def access_log(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
     if request.url.path.startswith("/api"):
-        log.info("request", extra={"method": request.method, "path": request.url.path, "status": response.status_code,
-                                   "ms": round((time.perf_counter() - start) * 1000, 1)})
+        log.info(
+            "request",
+            extra={
+                "method": request.method,
+                "path": request.url.path,
+                "status": response.status_code,
+                "ms": round((time.perf_counter() - start) * 1000, 1),
+            },
+        )
     return response
 
 
@@ -99,11 +123,28 @@ async def unhandled(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"detail": "Internal server error"})
 
 
-for r in (health.router, incidents.router, map_routes.router, scenarios.router, sessions.router):
+for r in (
+    health.router,
+    incidents.router,
+    map_routes.router,
+    scenarios.router,
+    sessions.router,
+):
     app.include_router(r)
 
+
+class NoCacheStaticFiles(StaticFiles):
+    """Static assets are revalidated on every load (ETag / 304), so a rebuilt or edited front end is never hidden by a stale
+    browser-cached stylesheet or script."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
 if STATIC_DIR.exists():
-    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    app.mount("/static", NoCacheStaticFiles(directory=STATIC_DIR), name="static")
 
 
 @app.get("/", include_in_schema=False)

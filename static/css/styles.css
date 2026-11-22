@@ -289,7 +289,7 @@
     html.dark-theme:not(.accessibility-contrast) .list-panel.is-floating { background: #15191c; border-color: #3c4043; }
 
     /* Custom dataset date picker: keeps the native OS menu from covering the map. */
-    .date-filter-control { position: relative; flex: 0 0 auto; z-index: 45; }
+    .date-filter-control { position: relative; flex: 0 0 auto; z-index: 20; }   /* below the sticky header (z-30) so it never floats over it; its menu still opens above the list and map */
     .date-filter-trigger { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; min-width: 154px; max-width: min(240px, 42vw); padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 12px; background: #fff; color: #1f2937; font-size: 13px; font-weight: 650; white-space: nowrap; cursor: pointer; box-shadow: 0 1px 2px rgba(15,23,42,.05); }
     .date-filter-trigger:hover { border-color: #eb0000; background: #fffafa; }
     .date-filter-trigger:focus-visible, .date-filter-option:focus-visible { outline: 3px solid #005fcc; outline-offset: 2px; }
