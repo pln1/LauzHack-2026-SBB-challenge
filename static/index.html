@@ -43,20 +43,20 @@
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <!-- Data Mode -->
         <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200" role="group">
-          <button id="mode-live-btn" onclick="setDataMode('live')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
+          <button id="mode-live-btn" onclick="setDataMode('live')" class="min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
             <span class="relative flex h-2 w-2">
               <span class="live-dot-ring absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
             </span>
             <span id="mode-live-label">Live: Today</span>
           </button>
-          <button id="mode-demo-btn" onclick="setDataMode('demo')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
+          <button id="mode-demo-btn" onclick="setDataMode('demo')" class="min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
             <span id="mode-demo-label">Dataset: Sept 2026</span>
           </button>
         </div>
 
         <!-- Simulate Real-Time Update Button -->
-        <button onclick="simulateLiveUpdate()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-[0.98]" title="Test how the system reacts to incoming real-time disruption updates">
+        <button onclick="simulateLiveUpdate()" class="min-h-10 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-[0.98]" title="Test how the system reacts to incoming real-time disruption updates">
           <svg class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -65,17 +65,17 @@
 
         <!-- Language Selector (EN / DE / FR / IT) -->
         <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200 text-xs font-semibold" role="group" aria-label="Language switcher">
-          <button onclick="switchLang('EN')" class="lang-btn px-2 py-1 rounded-lg bg-slate-900 text-white" data-lang="EN">EN</button>
-          <button onclick="switchLang('DE')" class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="DE">DE</button>
-          <button onclick="switchLang('FR')" class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="FR">FR</button>
-          <button onclick="switchLang('IT')" class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="IT">IT</button>
+          <button onclick="switchLang('EN')" class="lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg bg-slate-900 text-white" data-lang="EN">EN</button>
+          <button onclick="switchLang('DE')" class="lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="DE">DE</button>
+          <button onclick="switchLang('FR')" class="lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="FR">FR</button>
+          <button onclick="switchLang('IT')" class="lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900" data-lang="IT">IT</button>
         </div>
-        <button id="theme-toggle" type="button" onclick="toggleDarkTheme()" aria-pressed="false" aria-label="Enable dark theme" title="Enable dark theme" class="theme-toggle-btn inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition" >
+        <button id="theme-toggle" type="button" onclick="toggleDarkTheme()" aria-pressed="false" aria-label="Enable dark theme" title="Enable dark theme" class="theme-toggle-btn inline-flex items-center justify-center w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition">
           <svg id="theme-icon-moon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.3 15.3A8.5 8.5 0 0 1 8.7 3.7 8.5 8.5 0 1 0 20.3 15.3Z" /></svg>
           <svg id="theme-icon-sun" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
         </button>
         <div class="relative">
-          <button id="accessibility-toggle" onclick="toggleAccessibilityPanel()" aria-expanded="false" aria-controls="accessibility-panel" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-700 transition">Accessibility</button>
+          <button id="accessibility-toggle" onclick="toggleAccessibilityPanel()" aria-expanded="false" aria-controls="accessibility-panel" class="min-h-11 px-3 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-700 transition">Accessibility</button>
           <div id="accessibility-panel" class="accessibility-panel hidden bg-white rounded-2xl border border-slate-200 shadow-xl p-4 space-y-3" aria-label="Accessibility settings">
             <h2 id="accessibility-heading" class="text-sm font-extrabold text-slate-900">Display and accessibility</h2>
             <label class="flex items-center gap-3 text-sm font-semibold text-slate-800 cursor-pointer">
@@ -121,7 +121,7 @@
 
     <!-- KPI DAILY STATUS CARDS -->
     <section class="dashboard-intro grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" aria-label="Daily summary">
-      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+      <button id="kpi-active-card" type="button" data-kpi="ACTIVE" aria-pressed="false" onclick="setQuickFilter('ACTIVE')" class="kpi-card bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between text-left">
         <div>
           <p id="kpi-active-title" class="text-xs font-medium text-slate-500">Active disruptions now</p>
           <p id="kpi-active" class="text-2xl font-extrabold text-slate-900 mt-0.5">–</p>
@@ -132,9 +132,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-      </div>
+      </button>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+      <button id="kpi-bus-card" type="button" data-kpi="BUS" aria-pressed="false" onclick="setQuickFilter('BUS')" class="kpi-card bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between text-left">
         <div>
           <p id="kpi-bus-title" class="text-xs font-medium text-slate-500">Replacement buses</p>
           <p id="kpi-bus" class="text-2xl font-extrabold text-slate-900 mt-0.5">–</p>
@@ -145,9 +145,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m-8 4h8m-6 4h.01M16 15h.01M5 19h14a2 2 0 002-2V7a4 4 0 00-4-4H7a4 4 0 00-4 4v10a2 2 0 002 2z" />
           </svg>
         </div>
-      </div>
+      </button>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+      <button id="kpi-unknown-card" type="button" data-kpi="UNCERTAIN" aria-pressed="false" onclick="setQuickFilter('UNCERTAIN')" class="kpi-card bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between text-left">
         <div>
           <p id="kpi-unknown-title" class="text-xs font-medium text-slate-500">Incomplete / evolving data</p>
           <p id="kpi-unknown" class="text-2xl font-extrabold text-slate-900 mt-0.5">–</p>
@@ -158,9 +158,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-      </div>
+      </button>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+      <button id="kpi-resumed-card" type="button" data-kpi="RESUMED" aria-pressed="false" onclick="setQuickFilter('RESUMED')" class="kpi-card bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between text-left">
         <div>
           <p id="kpi-resumed-title" class="text-xs font-medium text-slate-500">Service resumed</p>
           <p id="kpi-resumed" class="text-2xl font-extrabold text-slate-900 mt-0.5">–</p>
@@ -171,7 +171,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-      </div>
+      </button>
     </section>
 
     <!-- SEARCH & FILTER BAR -->
@@ -187,10 +187,13 @@
         <input
           id="search-input"
           type="text"
+          autocomplete="off"
           oninput="handleFilterChange()"
-          placeholder="Search by station, canton, or line (e.g. Genève, RE33, Bern, S9, Visp)..."
+          aria-describedby="search-help"
+          placeholder="Search a station, canton or line (e.g. Genève, RE33, Bern)…"
           class="w-full pl-10 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB0000]/20 focus:border-[#EB0000] transition"
         />
+        <span id="search-help" class="sr-only">Search results update as you type.</span>
         <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 text-xs font-bold">
           ✕
         </button>
@@ -203,31 +206,31 @@
 
       <!-- Quick Filter Chips -->
       <div class="flex flex-wrap items-center gap-1.5" id="filter-chips">
-        <button onclick="setStatusFilter('ALL')" data-filter="ALL" class="filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white transition">
+        <button aria-pressed="true" onclick="setStatusFilter('ALL')" data-filter="ALL" class="filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white transition">
           All events
         </button>
-        <button onclick="setStatusFilter('ACTIVE')" data-filter="ACTIVE" class="filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+        <button aria-pressed="false" onclick="setStatusFilter('ACTIVE')" data-filter="ACTIVE" class="filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
           Critical / Interrupted
         </button>
-        <button onclick="setStatusFilter('RESTRICTED')" data-filter="RESTRICTED" class="filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+        <button aria-pressed="false" onclick="setStatusFilter('RESTRICTED')" data-filter="RESTRICTED" class="filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
           Limited service
         </button>
-        <button onclick="setStatusFilter('BUS')" data-filter="BUS" class="filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+        <button aria-pressed="false" onclick="setStatusFilter('BUS')" data-filter="BUS" class="filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
           🚌 Replacement bus
         </button>
-        <button onclick="setStatusFilter('RESUMED')" data-filter="RESUMED" class="filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+        <button aria-pressed="false" onclick="setStatusFilter('RESUMED')" data-filter="RESUMED" class="filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
           Resumed
         </button>
       </div>
     </section>
 
     <!-- WORKSPACE: DAILY INCIDENTS LIST (LEFT) + INTERACTIVE SWISS MAP (RIGHT) -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+    <section class="workspace-grid grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
       <!-- LEFT COLUMN: DAILY DISRUPTION CARDS -->
-      <div id="incident-list-section" class="lg:col-span-6 space-y-3 dashboard-intro dashboard-intro--list">
+      <div id="incident-list-section" class="lg:col-span-5 space-y-3 dashboard-intro dashboard-intro--list">
         <div class="flex items-center justify-between px-1">
-          <h2 id="list-heading" class="text-sm font-bold uppercase tracking-wider text-slate-500">
+          <h2 id="list-heading" class="text-base font-bold text-slate-700">
             Today's disruptions & incidents (<span id="visible-count">0</span>)
           </h2>
           <span id="list-hint" class="text-xs text-slate-400">Select a card to choose next actions</span>
@@ -239,36 +242,39 @@
       </div>
 
       <!-- RIGHT COLUMN: INTERACTIVE MAP & OFFICIAL SBB CONTEXT -->
-      <div id="map-section" class="lg:col-span-6 lg:sticky lg:top-20 space-y-3 dashboard-intro dashboard-intro--map">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div id="map-section" class="map-section lg:col-span-7 dashboard-intro dashboard-intro--map">
+        <div id="map-canvas-panel" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <!-- Map Header -->
           <div class="px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-white">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-[#EB0000]"></span>
               <h3 id="map-heading" class="text-sm font-bold text-slate-900">Interactive SBB Disruption Map</h3>
             </div>
-            <div class="flex items-center gap-3 text-[11px] font-medium text-slate-600">
-              <span class="flex items-center gap-1"><span class="w-3 h-1 bg-[#EB0000] inline-block rounded"></span> <span id="legend-interrupted">Interrupted</span></span>
-              <span class="flex items-center gap-1"><span class="w-3 h-1 bg-amber-500 inline-block rounded"></span> <span id="legend-restricted">Restricted</span></span>
-              <span class="flex items-center gap-1"><span class="w-3 h-1 bg-emerald-600 inline-block rounded border-b border-dashed"></span> <span id="legend-detour">Detour</span></span>
-              <span class="flex items-center gap-1"><span class="bus-legend-line w-3 h-1 inline-block rounded"></span> 🚌</span>
-              <button id="reset-map-btn" onclick="resetMapView()" class="ml-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
+            <div role="group" aria-label="Map legend and controls" class="map-legend flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-medium text-slate-600">
+              <span class="flex items-center gap-1.5"><span class="legend-line legend-line--interrupted" aria-hidden="true"></span> <span id="legend-interrupted">Interrupted</span></span>
+              <span class="flex items-center gap-1.5"><span class="legend-line legend-line--restricted" aria-hidden="true"></span> <span id="legend-restricted">Restricted</span></span>
+              <span class="flex items-center gap-1.5"><span class="legend-line legend-line--detour" aria-hidden="true"></span> <span id="legend-detour">Detour</span></span>
+              <span class="flex items-center gap-1.5"><span class="bus-legend-line w-4 h-1 inline-block rounded" aria-hidden="true"></span><span id="legend-bus">Replacement bus</span></span>
+              <button id="reset-map-btn" onclick="resetMapView()" class="ml-auto min-h-11 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
                 All Switzerland
               </button>
             </div>
           </div>
 
           <!-- Leaflet Map Container -->
-          <div class="relative h-[440px] sm:h-[500px] w-full">
+          <div class="relative h-[360px] sm:h-[440px] xl:h-[480px] w-full">
             <div id="swiss-map" aria-label="Interactive disruption map. Matching disruption details are available in the incident list." aria-describedby="map-accessible-help"></div>
             <p id="map-accessible-help" class="sr-only">The map is a visual overview. Use the disruption list to read incident details and open the action assistant with a keyboard or screen reader.</p>
             <p id="map-note" role="status" aria-live="polite" class="hidden absolute top-3 left-3 z-20 max-w-[70%] px-2.5 py-1 rounded-lg bg-white/95 border border-slate-200 shadow text-[11px] font-semibold text-slate-600"></p>
 
-            <!-- Floating Selected Incident Card on Map -->
-            <button id="map-overlay-show" onclick="toggleMapIncidentOverlay(true)" class="hidden absolute bottom-3 left-3 z-20 px-3 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-lg text-xs font-bold text-slate-700 hover:text-slate-900" aria-label="Show selected incident card">Show incident</button>
-            <div id="map-selected-overlay" class="absolute bottom-3 left-3 right-3 z-20 bg-white/95 backdrop-blur-md rounded-xl p-3.5 pr-10 border border-slate-200 shadow-lg transition-all">
-              <button onclick="toggleMapIncidentOverlay(false)" class="absolute top-2 right-2 w-7 h-7 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition flex items-center justify-center" aria-label="Hide selected incident card" title="Hide card">✕</button>
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          </div>
+        </div>
+
+        <div id="map-selected-shell" class="relative">
+          <button id="map-overlay-show" onclick="toggleMapIncidentOverlay(true)" class="hidden w-full min-h-11 px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm text-sm font-bold text-slate-700 hover:text-slate-900 text-left" aria-label="Show selected incident card">Show selected disruption</button>
+          <div id="map-selected-overlay" class="relative bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+              <button id="map-overlay-hide" onclick="toggleMapIncidentOverlay(false)" class="absolute top-2 right-2 w-11 h-11 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition flex items-center justify-center" aria-label="Hide selected incident card" title="Hide card">✕</button>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-8">
                 <div class="min-w-0">
                   <div class="flex items-center gap-2">
                     <span id="overlay-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-500">…</span>
@@ -287,12 +293,11 @@
                   </svg>
                 </button>
               </div>
-            </div>
           </div>
         </div>
 
         <!-- Official SBB.ch Integration Banner -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div id="official-links" class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 font-bold text-xs">
               SBB
@@ -302,7 +307,7 @@
               <p id="sbb-banner-sub" class="text-[11px] text-slate-500">Live timetable, train status & compensation claims without login</p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="official-link-list flex flex-wrap items-center gap-2">
             <a id="sbb-timetable-link" href="https://www.sbb.ch/en" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition">
               SBB Timetable ↗
             </a>

@@ -11,14 +11,15 @@
         toastBadge: 'New SBB Update',
         toastAction: 'Open action plan',
         kpiActiveTitle: 'Active disruptions now',
-        kpiActiveSub: 'Across SBB CFF FFS network',
+        kpiActiveSub: 'Show interrupted services',
         kpiBusTitle: 'Replacement buses',
-        kpiBusSub: 'Bahnersatz running / dispatched',
-        kpiUnknownTitle: 'Incomplete / evolving data',
-        kpiUnknownSub: 'Restoration time under assessment',
+        kpiBusSub: 'Show bus replacement services',
+        kpiUnknownTitle: 'Uncertain forecast',
+        kpiUnknownSub: 'Show uncertain end times',
         kpiResumedTitle: 'Service resumed',
-        kpiResumedSub: 'Residual delays possible',
-        searchPlaceholder: 'Search by station, canton, or line (e.g. Genève, RE33, Bern, S9, Visp)...',
+        kpiResumedSub: 'Show resumed services',
+        searchPlaceholder: 'Search station, canton, or line (e.g. Genève or IC3)',
+        searchHelp: 'Search results update as you type.',
         filterAll: 'All events',
         filterActive: 'Critical / Interrupted',
         filterRestricted: 'Limited service',
@@ -26,14 +27,19 @@
         filterResumed: 'Resumed',
         listHeading: "Today's disruptions & incidents",
         listHint: 'Select a card to choose next actions',
+        forecastUncertain: 'Time estimate uncertain',
+        replacementBusBadge: 'Replacement bus',
         cantonLabel: 'Canton',
         cardActionBtn: 'What to do now',
         mapHeading: 'Interactive SBB Disruption Map',
         legendInterrupted: 'Interrupted',
         legendRestricted: 'Restricted',
         legendDetour: 'Detour',
+        legendBus: 'Replacement bus',
         resetMapBtn: 'All Switzerland',
         overlayBtnText: 'Resolve my trip',
+        showSelectedIncident: 'Show selected disruption',
+        hideSelectedIncident: 'Hide selected incident card',
         sbbBannerTitle: 'Direct link to official SBB.ch services',
         sbbBannerSub: 'Route search, live traffic information & delay compensation',
         serviceNavDisruptions: 'Disruptions',
@@ -85,14 +91,15 @@
         toastBadge: 'Neues SBB-Update',
         toastAction: 'Massnahmenplan öffnen',
         kpiActiveTitle: 'Aktuelle Störungen',
-        kpiActiveSub: 'Im gesamten SBB CFF FFS Netz',
+        kpiActiveSub: 'Unterbrochene Verbindungen anzeigen',
         kpiBusTitle: 'Bahnersatzbusse',
-        kpiBusSub: 'Bahnersatz im Einsatz / bestellt',
-        kpiUnknownTitle: 'Unvollständige / laufende Daten',
-        kpiUnknownSub: 'Dauer wird derzeit abgeklärt',
+        kpiBusSub: 'Ersatzbusse anzeigen',
+        kpiUnknownTitle: 'Unsichere Prognose',
+        kpiUnknownSub: 'Unsichere Endzeiten anzeigen',
         kpiResumedTitle: 'Betrieb wiederaufgenommen',
-        kpiResumedSub: 'Vereinzelte Verspätungen möglich',
-        searchPlaceholder: 'Suche nach Bahnhof, Kanton oder Linie (z.B. Genève, RE33, Bern, S9, Visp)...',
+        kpiResumedSub: 'Wiederaufgenommene Verbindungen anzeigen',
+        searchPlaceholder: 'Bahnhof, Kanton oder Linie suchen (z. B. Genève oder IC3)',
+        searchHelp: 'Die Ergebnisse werden während der Eingabe aktualisiert.',
         filterAll: 'Alle Ereignisse',
         filterActive: 'Unterbruch / Kritisch',
         filterRestricted: 'Einschränkung',
@@ -100,14 +107,19 @@
         filterResumed: 'Behoben',
         listHeading: 'Heutige Störungen & Ereignisse',
         listHint: 'Karte wählen für nächste Schritte',
+        forecastUncertain: 'Zeitangabe unsicher',
+        replacementBusBadge: 'Ersatzbus',
         cantonLabel: 'Kanton',
         cardActionBtn: 'Was jetzt tun',
         mapHeading: 'Interaktive SBB-Störungskarte',
         legendInterrupted: 'Unterbruch',
         legendRestricted: 'Eingeschränkt',
         legendDetour: 'Umleitung',
+        legendBus: 'Ersatzbus',
         resetMapBtn: 'Ganze Schweiz',
         overlayBtnText: 'Reise lösen',
+        showSelectedIncident: 'Ausgewählte Störung anzeigen',
+        hideSelectedIncident: 'Ausgewählte Störung ausblenden',
         sbbBannerTitle: 'Direktverbindung zu offiziellen SBB.ch-Diensten',
         sbbBannerSub: 'Verbindungssuche, aktuelle Betriebslage & Entschädigung bei Verspätung',
         serviceNavDisruptions: 'Störungen',
@@ -159,14 +171,15 @@
         toastBadge: 'Nouvelle info CFF',
         toastAction: "Ouvrir le plan d'action",
         kpiActiveTitle: 'Perturbations actives',
-        kpiActiveSub: 'Sur le réseau CFF SBB FFS',
+        kpiActiveSub: 'Afficher les lignes interrompues',
         kpiBusTitle: 'Bus de remplacement',
-        kpiBusSub: 'Bus en circulation / commandés',
-        kpiUnknownTitle: 'Données évolutives / incomplètes',
-        kpiUnknownSub: 'Durée en cours d’évaluation',
+        kpiBusSub: 'Afficher les bus de remplacement',
+        kpiUnknownTitle: 'Durée estimée incertaine',
+        kpiUnknownSub: 'Afficher les horaires incertains',
         kpiResumedTitle: 'Trafic rétabli',
-        kpiResumedSub: 'Retards résiduels possibles',
-        searchPlaceholder: 'Rechercher par gare, canton ou ligne (ex. Genève, RE33, Bern, S9, Visp)...',
+        kpiResumedSub: 'Afficher les lignes rétablies',
+        searchPlaceholder: 'Rechercher une gare, un canton ou une ligne (ex. Genève ou IC3)',
+        searchHelp: 'Les résultats se mettent à jour pendant la saisie.',
         filterAll: 'Tous les événements',
         filterActive: 'Interruption / Critique',
         filterRestricted: 'Trafic restreint',
@@ -174,14 +187,19 @@
         filterResumed: 'Rétabli',
         listHeading: "Perturbations et incidents du jour",
         listHint: 'Sélectionnez une carte pour choisir une action',
+        forecastUncertain: 'Durée estimée incertaine',
+        replacementBusBadge: 'Bus de remplacement',
         cantonLabel: 'Canton',
         cardActionBtn: 'Que faire maintenant',
         mapHeading: 'Carte interactive des perturbations CFF',
         legendInterrupted: 'Interrompu',
         legendRestricted: 'Restreint',
         legendDetour: 'Déviation',
+        legendBus: 'Bus de remplacement',
         resetMapBtn: 'Toute la Suisse',
         overlayBtnText: 'Résoudre mon trajet',
+        showSelectedIncident: 'Afficher la perturbation sélectionnée',
+        hideSelectedIncident: 'Masquer la perturbation sélectionnée',
         sbbBannerTitle: 'Lien direct vers les services officiels CFF.ch',
         sbbBannerSub: 'Recherche de trajet, situation du trafic et indemnisation en cas de retard',
         serviceNavDisruptions: 'Perturbations',
@@ -233,14 +251,15 @@
         toastBadge: 'Nuovo aggiornamento FFS',
         toastAction: 'Apri piano d’azione',
         kpiActiveTitle: 'Perturbazioni attive ora',
-        kpiActiveSub: 'Sulla rete FFS SBB CFF',
+        kpiActiveSub: 'Mostra le tratte interrotte',
         kpiBusTitle: 'Bus sostitutivi',
-        kpiBusSub: 'Bus in servizio / predisposti',
-        kpiUnknownTitle: 'Dati incompleti / in evoluzione',
-        kpiUnknownSub: 'Tempo di ripristino in valutazione',
+        kpiBusSub: 'Mostra i bus sostitutivi',
+        kpiUnknownTitle: 'Previsione incerta',
+        kpiUnknownSub: 'Mostra gli orari incerti',
         kpiResumedTitle: 'Circolazione ripristinata',
-        kpiResumedSub: 'Possibili ritardi residui',
-        searchPlaceholder: 'Cerca per stazione, cantone o linea (es. Genève, RE33, Bern, S9, Visp)...',
+        kpiResumedSub: 'Mostra le tratte ripristinate',
+        searchPlaceholder: 'Cerca stazione, cantone o linea (es. Genève o IC3)',
+        searchHelp: 'I risultati si aggiornano durante la digitazione.',
         filterAll: 'Tutti gli eventi',
         filterActive: 'Interruzione / Critico',
         filterRestricted: 'Limitazioni',
@@ -248,14 +267,19 @@
         filterResumed: 'Ripristinato',
         listHeading: 'Perturbazioni e guasti di oggi',
         listHint: 'Seleziona una scheda per scegliere le azioni',
+        forecastUncertain: 'Durata stimata incerta',
+        replacementBusBadge: 'Bus sostitutivo',
         cantonLabel: 'Cantone',
         cardActionBtn: 'Cosa fare ora',
         mapHeading: 'Mappa interattiva delle perturbazioni FFS',
         legendInterrupted: 'Interrotto',
         legendRestricted: 'Limitato',
         legendDetour: 'Deviazione',
+        legendBus: 'Bus sostitutivo',
         resetMapBtn: 'Tutta la Svizzera',
         overlayBtnText: 'Risolvi il viaggio',
+        showSelectedIncident: 'Mostra la perturbazione selezionata',
+        hideSelectedIncident: 'Nascondi la perturbazione selezionata',
         sbbBannerTitle: 'Collegamento diretto ai servizi ufficiali FFS.ch',
         sbbBannerSub: 'Ricerca del percorso, situazione del traffico e indennità per ritardo',
         serviceNavDisruptions: 'Perturbazioni',
@@ -339,6 +363,7 @@
       lang: 'EN',
       dataMode: 'live',
       statusFilter: 'ALL',
+      quickFilter: null,
       searchQuery: '',
       dateFilter: '',
       selectedIncidentId: null,
@@ -518,9 +543,11 @@
       mapLayersGroup.clearLayers();
       if (!mapData || !mapData.features) return;
       const sel = state.selectedIncidentId;
+      const visibleIncidentIds = state.quickFilter ? getVisibleIncidentIds() : null;
       const layer = L.geoJSON(mapData, {
         filter: f => {
           const p = f.properties;
+          if (visibleIncidentIds && !visibleIncidentIds.has(p.id)) return false;
           if (detourFocusMode) return p.id === sel && (p.kind === 'segment' || p.kind === 'incident');
           return p.kind === 'segment' || p.kind === 'incident' || p.kind === 'detour';
         },
@@ -678,7 +705,7 @@
     }
 
     function toggleMapIncidentOverlay(show) {
-      document.getElementById('map-selected-overlay').classList.toggle('is-hidden', !show);
+      document.getElementById('map-selected-overlay').classList.toggle('hidden', !show);
       document.getElementById('map-overlay-show').classList.toggle('hidden', show);
     }
 
@@ -701,8 +728,9 @@
         state.kpis = data.kpis;
         state.totalCount = data.totalCount;
         if (state.dataMode === 'dataset') renderDateOptions(data.availableDates || []);
-        if (selectFirst || !state.incidents.some(i => i.id === state.selectedIncidentId)) {
-          state.selectedIncidentId = state.incidents.length ? state.incidents[0].id : null;
+        const visibleIncidents = getVisibleIncidents();
+        if (selectFirst || !visibleIncidents.some(i => i.id === state.selectedIncidentId)) {
+          state.selectedIncidentId = visibleIncidents.length ? visibleIncidents[0].id : null;
         }
         renderDashboard();
         updateOverlay();
@@ -722,20 +750,35 @@
       document.getElementById('kpi-bus').textContent = k.replacementBus;
       document.getElementById('kpi-unknown').textContent = k.uncertainForecast;
       document.getElementById('kpi-resumed').textContent = k.resumed;
+      document.querySelectorAll('[data-kpi]').forEach(button => {
+        const key = button.dataset.kpi;
+        const active = key === 'UNCERTAIN' ? state.quickFilter === key : !state.quickFilter && state.statusFilter === key;
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    function getVisibleIncidents() {
+      if (state.quickFilter === 'UNCERTAIN') return state.incidents.filter(inc => !!inc.forecastWarning);
+      return state.incidents;
+    }
+
+    function getVisibleIncidentIds() {
+      return new Set(getVisibleIncidents().map(inc => inc.id));
     }
 
     function sourceChips(sources) {
-      return (sources || []).map(s => `<span title="${escapeHtml(t('source' + s))}" class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-500">${s === 'INTERNAL' ? 'KULT' : s}</span>`).join('');
+      return (sources || []).map(s => `<span title="${escapeHtml(t('source' + s))}" class="source-chip bg-slate-100 border border-slate-200 text-slate-500">${s === 'INTERNAL' ? 'KULT' : s}</span>`).join('');
     }
 
     function renderDashboard() {
       updateKpiCounters();
       const listContainer = document.getElementById('incidents-list');
-      document.getElementById('visible-count').textContent = state.incidents.length;
+      const visibleIncidents = getVisibleIncidents();
+      document.getElementById('visible-count').textContent = visibleIncidents.length;
       const allChip = document.querySelector('[data-filter="ALL"]');
       if (allChip) allChip.textContent = `${t('filterAll')} (${state.totalCount})`;
 
-      if (state.incidents.length === 0) {
+      if (visibleIncidents.length === 0) {
         listContainer.innerHTML = `
           <div class="bg-white rounded-2xl p-8 border border-slate-200 text-center space-y-2">
             <p class="text-sm font-bold text-slate-800">${t('emptyTitle')}</p>
@@ -746,34 +789,37 @@
         return;
       }
 
-      listContainer.innerHTML = state.incidents.map(inc => {
+      listContainer.innerHTML = visibleIncidents.map(inc => {
         const isSelected = inc.id === state.selectedIncidentId;
         const st = statusStyles(inc.status);
-        const cardBorder = isSelected ? 'border-[#EB0000] ring-2 ring-[#EB0000]/15 bg-white' : 'border-slate-200 hover:border-slate-300 bg-white';
+        const cardBorder = isSelected ? 'incident-card--selected border-[#EB0000] bg-white' : 'border-slate-200 hover:border-slate-300 bg-white';
         const linesHtml = inc.affectedLines.slice(0, 10)
-          .map(line => `<span class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-800">${escapeHtml(line)}</span>`).join('');
+          .map(line => `<span class="line-chip px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800">${escapeHtml(line)}</span>`).join('');
         return `
-          <article data-incident-id="${inc.id}" tabindex="0" role="group" aria-keyshortcuts="Enter Space" aria-label="${escapeHtml(inc.statusLabel + '. ' + inc.title + '. ' + inc.reason + '. ' + (ACCESSIBILITY_LABELS[state.lang] || ACCESSIBILITY_LABELS.EN)[6])}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectIncident(${inc.id},true)}" onclick="selectIncident(${inc.id}, true)" class="incident-card rounded-2xl p-4 border transition-all cursor-pointer shadow-sm ${cardBorder}">
+          <article data-incident-id="${inc.id}" tabindex="0" role="group" aria-current="${isSelected ? 'true' : 'false'}" aria-keyshortcuts="Enter Space" aria-label="${escapeHtml(inc.statusLabel + '. ' + inc.title + '. ' + inc.reason + '. ' + (ACCESSIBILITY_LABELS[state.lang] || ACCESSIBILITY_LABELS.EN)[6])}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectIncident(${inc.id},true)}" onclick="selectIncident(${inc.id}, true)" class="incident-card rounded-2xl p-4 border transition-all cursor-pointer shadow-sm ${cardBorder}">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${st.badge}">${escapeHtml(inc.statusLabel)}</span>
-                <span class="text-[11px] font-semibold text-slate-400">${t('cantonLabel')} ${escapeHtml(inc.canton || 'CH')}</span>
-                ${inc.hasReplacementBus ? '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🚌 Bahnersatz</span>' : ''}
-                ${inc.forecastWarning ? '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">⏳</span>' : ''}
+                <span class="status-badge px-2.5 py-1 rounded-full text-xs font-bold border ${st.badge}">${escapeHtml(inc.statusLabel)}</span>
+                <span class="text-xs font-semibold text-slate-500">${escapeHtml(t('cantonLabel'))} ${escapeHtml(inc.canton || 'CH')}</span>
+                ${inc.hasReplacementBus ? `<span class="service-badge service-badge--bus px-2.5 py-1 rounded-full text-xs font-bold border">🚌 ${escapeHtml(t('replacementBusBadge'))}</span>` : ''}
               </div>
-              <span class="text-[11px] font-medium text-slate-400">${escapeHtml(inc.updatedAgo)} · v${inc.currentVersion}</span>
+              <span class="text-xs font-medium text-slate-500">${escapeHtml(inc.updatedAgo)}</span>
             </div>
-            <div class="mt-2.5">
-              <h3 class="text-base font-extrabold text-slate-900 leading-snug">${escapeHtml(inc.title)}</h3>
-              <p class="text-xs text-slate-600 mt-0.5">${escapeHtml(inc.reason)}</p>
+            <div class="mt-3">
+              <h3 class="text-lg font-extrabold text-slate-900 leading-snug">${escapeHtml(inc.title)}</h3>
+              <p class="text-sm text-slate-600 mt-1">${escapeHtml(inc.reason)}</p>
             </div>
-            <div class="mt-3 flex flex-wrap items-center gap-1.5">${linesHtml}<span class="flex items-center gap-1 ml-auto">${sourceChips(inc.sources)}</span></div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5 text-xs text-slate-600">
-                <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span class="font-medium">${escapeHtml(inc.forecastLabel)}</span>
+            <div class="mt-3 flex flex-wrap items-center gap-1.5">${linesHtml}</div>
+            <div class="forecast-line mt-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-700 ${inc.forecastWarning ? 'forecast-line--uncertain' : ''}">
+              <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <span>${escapeHtml(inc.forecastLabel)}</span>
+              ${inc.forecastWarning ? `<span class="forecast-uncertain-label">${escapeHtml(t('forecastUncertain'))}</span>` : ''}
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                <span>v${inc.currentVersion}</span><span aria-hidden="true">·</span><span class="flex items-center gap-1">${sourceChips(inc.sources)}</span>
               </div>
-              <button onclick="event.stopPropagation(); openAssistantDrawer(${inc.id})" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${isSelected ? 'bg-[#EB0000] text-white hover:bg-[#C60000]' : 'bg-slate-900 text-white hover:bg-slate-800'}">
+              <button onclick="event.stopPropagation(); openAssistantDrawer(${inc.id})" class="incident-action min-h-11 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 ${isSelected ? 'incident-action--primary' : ''}">
                 <span>${t('cardActionBtn')}</span><span>→</span>
               </button>
             </div>
@@ -858,6 +904,7 @@
       set('kpi-resumed-title', 'kpiResumedTitle'); set('kpi-resumed-sub', 'kpiResumedSub');
       document.getElementById('search-input').placeholder = t('searchPlaceholder');
       document.getElementById('search-label').textContent = t('searchPlaceholder');
+      set('search-help', 'searchHelp');
       document.getElementById('chat-custom-label').textContent = t('chatPlaceholder');
       document.querySelector('[data-filter="ACTIVE"]').textContent = t('filterActive');
       document.querySelector('[data-filter="RESTRICTED"]').textContent = t('filterRestricted');
@@ -867,8 +914,13 @@
       const heading = state.dataMode === 'dataset' ? t('listHeadingDataset') : t('listHeading');
       document.getElementById('list-heading').innerHTML = `${escapeHtml(heading)} (<span id="visible-count">${visibleCount}</span>)`;
       set('list-hint', 'listHint'); set('map-heading', 'mapHeading'); set('legend-interrupted', 'legendInterrupted');
-      set('legend-restricted', 'legendRestricted'); set('legend-detour', 'legendDetour'); set('reset-map-btn', 'resetMapBtn');
-      set('overlay-btn-text', 'overlayBtnText'); set('sbb-banner-title', 'sbbBannerTitle'); set('sbb-banner-sub', 'sbbBannerSub');
+      set('legend-restricted', 'legendRestricted'); set('legend-detour', 'legendDetour'); set('legend-bus', 'legendBus'); set('reset-map-btn', 'resetMapBtn');
+      set('overlay-btn-text', 'overlayBtnText'); set('map-overlay-show', 'showSelectedIncident');
+      document.getElementById('map-overlay-show').setAttribute('aria-label', t('showSelectedIncident'));
+      const hideSelected = document.getElementById('map-overlay-hide');
+      hideSelected.setAttribute('aria-label', t('hideSelectedIncident'));
+      hideSelected.title = t('hideSelectedIncident');
+      set('sbb-banner-title', 'sbbBannerTitle'); set('sbb-banner-sub', 'sbbBannerSub');
       updateOfficialLinks(currentIncident());
       set('audit-heading', 'auditHeading');
       document.getElementById('audit-toggle-label').textContent = state.auditExpanded ? t('collapse') : t('expand');
@@ -886,13 +938,35 @@
     }
 
     function setStatusFilter(filter) {
+      state.quickFilter = null;
       state.statusFilter = filter;
       document.querySelectorAll('.filter-chip').forEach(btn => {
-        btn.className = btn.dataset.filter === filter
-          ? 'filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white transition'
-          : 'filter-chip px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+        const active = btn.dataset.filter === filter;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.className = active
+          ? 'filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white transition'
+          : 'filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
       });
+      renderedMapData = null;
       loadDashboard();
+    }
+
+    function setQuickFilter(filter) {
+      if (filter === 'UNCERTAIN') {
+        state.statusFilter = 'ALL';
+        state.quickFilter = state.quickFilter === filter ? null : filter;
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+          const active = btn.dataset.filter === 'ALL';
+          btn.setAttribute('aria-pressed', String(active));
+          btn.className = active
+            ? 'filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white transition'
+            : 'filter-chip min-h-11 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+        });
+        renderedMapData = null;
+        loadDashboard(true);
+        return;
+      }
+      setStatusFilter(state.statusFilter === filter && !state.quickFilter ? 'ALL' : filter);
     }
 
     function handleFilterChange() {
@@ -934,11 +1008,11 @@
       const liveBtn = document.getElementById('mode-live-btn');
       const demoBtn = document.getElementById('mode-demo-btn');
       if (state.dataMode === 'live') {
-        liveBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm flex items-center gap-1.5';
-        demoBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900';
+        liveBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm flex items-center gap-1.5';
+        demoBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900';
       } else {
-        demoBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm';
-        liveBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+        demoBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm';
+        liveBtn.className = 'min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
       }
       document.getElementById('date-select').classList.toggle('hidden', state.dataMode !== 'dataset');
       applyStaticTranslations();
@@ -949,7 +1023,7 @@
     async function switchLang(lang) {
       state.lang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.className = btn.dataset.lang === lang ? 'lang-btn px-2 py-1 rounded-lg bg-slate-900 text-white' : 'lang-btn px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900';
+        btn.className = btn.dataset.lang === lang ? 'lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg bg-slate-900 text-white' : 'lang-btn min-h-10 min-w-10 px-2 py-1 rounded-lg text-slate-600 hover:text-slate-900';
       });
       applyStaticTranslations();
       await loadDashboard();
