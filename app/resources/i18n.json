@@ -1,0 +1,212 @@
+{
+ "STATUS_LABELS": {
+  "ACTIVE": {
+   "en": "Interrupted service",
+   "de": "Unterbruch",
+   "fr": "Interruption",
+   "it": "Interruzione"
+  },
+  "RESTRICTED": {
+   "en": "Limited service",
+   "de": "Einschränkung",
+   "fr": "Trafic restreint",
+   "it": "Limitazioni"
+  },
+  "RESUMED": {
+   "en": "Service resumed",
+   "de": "Betrieb wiederaufgenommen",
+   "fr": "Trafic rétabli",
+   "it": "Circolazione ripristinata"
+  }
+ },
+ "SBB_LINKS": {
+  "en": {
+   "timetable": "https://www.sbb.ch/en",
+   "traffic": "https://www.sbb.ch/en/plan/rail-traffic-information?poiid=1283280",
+   "refund": "https://www.sbb.ch/en/help-and-contact/refunds-compensation/refunds-compensation/compensation-for-delays.html"
+  },
+  "de": {
+   "timetable": "https://www.sbb.ch/de",
+   "traffic": "https://www.sbb.ch/de/reiseinformationen/bahnverkehrsinfo/betriebslage-stoerungen.html?poiid=719144",
+   "refund": "https://www.sbb.ch/de/hilfe-und-kontakt/erstattung-entschaedigung/rueckerstattung/entschaedigung-bei-verspaetung.html"
+  },
+  "fr": {
+   "timetable": "https://www.sbb.ch/fr",
+   "traffic": "https://www.sbb.ch/fr/planifier/information-trafic-ferroviaire?poiid=1274174",
+   "refund": "https://www.sbb.ch/fr/aide-et-contact/remboursement-indemnisation/remboursements-indemnisations/indemnisation-cas-retard.html"
+  },
+  "it": {
+   "timetable": "https://www.sbb.ch/it",
+   "traffic": "https://www.sbb.ch/it/pianificare/informazioni-traffico-ferroviario?poiid=1256950",
+   "refund": "https://www.sbb.ch/it/aiuto-e-contatto/rimborso-indennita/rimborsi-indennita/indennita-caso-ritardo.html"
+  }
+ },
+ "LINK_LABELS": {
+  "timetable": {
+   "en": "Search route in SBB timetable ↗",
+   "de": "Strecke im SBB Fahrplan suchen ↗",
+   "fr": "Chercher le trajet dans l’horaire CFF ↗",
+   "it": "Cerca il percorso nell’orario FFS ↗"
+  },
+  "traffic": {
+   "en": "Official SBB live status ↗",
+   "de": "Offizielle SBB Betriebslage ↗",
+   "fr": "Info trafic officielle CFF ↗",
+   "it": "Info traffico ufficiale FFS ↗"
+  },
+  "refund": {
+   "en": "Delay compensation on SBB.ch ↗",
+   "de": "Entschädigung bei Verspätung ↗",
+   "fr": "Indemnisation en cas de retard ↗",
+   "it": "Indennità in caso di ritardo ↗"
+  }
+ },
+ "SCENARIOS": [
+  {
+   "slug": "missed_connection",
+   "icon": "⏱️",
+   "title": {
+    "en": "I might miss my connection",
+    "de": "Ich verpasse meinen Anschluss",
+    "fr": "Je risque de rater ma correspondance",
+    "it": "Rischio di perdere la coincidenza"
+   },
+   "description": {
+    "en": "Connection risk check, next train & ticket validity",
+    "de": "Anschlussprüfung, nächster Zug & Ticketgültigkeit",
+    "fr": "Vérification de correspondance, train suivant & billet",
+    "it": "Verifica coincidenza, prossimo treno e validità biglietto"
+   }
+  },
+  {
+   "slug": "detour_route",
+   "icon": "🧭",
+   "title": {
+    "en": "How do I take a detour?",
+    "de": "Wie kann ich die Störung umfahren?",
+    "fr": "Comment contourner la perturbation ?",
+    "it": "Come posso fare una deviazione?"
+   },
+   "description": {
+    "en": "Alternative line, Bahnersatz bus & route on map",
+    "de": "Alternativstrecke, Bahnersatzbus & Karte",
+    "fr": "Ligne alternative, bus de remplacement & carte",
+    "it": "Linea alternativa, bus sostitutivo e percorso su mappa"
+   }
+  },
+  {
+   "slug": "refund_compensation",
+   "icon": "💳",
+   "title": {
+    "en": "Refunds & compensation",
+    "de": "Rückerstattung & Entschädigung",
+    "fr": "Remboursement & indemnisation",
+    "it": "Rimborsi e indennizzi"
+   },
+   "description": {
+    "en": "Ticket refund rules & 60+ min delay claims",
+    "de": "Bedingungen für Erstattung & Verspätung ab 60 Min.",
+    "fr": "Règles de remboursement & retard de 60+ min",
+    "it": "Regole di rimborso e indennizzo per ritardi 60+ min"
+   }
+  },
+  {
+   "slug": "status_timeline",
+   "icon": "📡",
+   "title": {
+    "en": "What happened & how long?",
+    "de": "Was ist passiert und wie lange?",
+    "fr": "Que s’est-il passé et pour combien de temps ?",
+    "it": "Cosa è successo e quanto durerà?"
+   },
+   "description": {
+    "en": "Forecast reliability & whether to wait at the station",
+    "de": "Prognose-Zuverlässigkeit & Empfehlung am Bahnhof",
+    "fr": "Fiabilité des prévisions & conseil en gare",
+    "it": "Affidabilità della previsione e consigli in stazione"
+   }
+  }
+ ],
+ "FORECAST_LABELS": {
+  "ENDED": {
+   "en": "Service resumed — residual delays possible",
+   "de": "Betrieb wiederaufgenommen — vereinzelt Verspätungen möglich",
+   "fr": "Trafic rétabli — retards résiduels possibles",
+   "it": "Circolazione ripristinata — possibili ritardi residui"
+  },
+  "UNKNOWN": {
+   "en": "End not yet known (under assessment)",
+   "de": "Dauer unbekannt (wird abgeklärt)",
+   "fr": "Durée inconnue (en cours d’évaluation)",
+   "it": "Durata sconosciuta (in valutazione)"
+  },
+  "NONE": {
+   "en": "No end time communicated",
+   "de": "Keine Dauer kommuniziert",
+   "fr": "Aucune durée communiquée",
+   "it": "Nessuna durata comunicata"
+  },
+  "UNTIL": {
+   "en": "Until {t_to}",
+   "de": "Bis {t_to}",
+   "fr": "Jusqu’à {t_to}",
+   "it": "Fino alle {t_to}"
+  },
+  "UNTIL_DATE": {
+   "en": "Until {dt_to}",
+   "de": "Bis {dt_to}",
+   "fr": "Jusqu’au {dt_to}",
+   "it": "Fino al {dt_to}"
+  },
+  "UNTIL_AT_LEAST": {
+   "en": "At least until {at} (extension possible)",
+   "de": "Mindestens bis {at} (Verlängerung möglich)",
+   "fr": "Au moins jusqu’à {at} (prolongation possible)",
+   "it": "Almeno fino alle {at} (possibile proroga)"
+  },
+  "UNTIL_AT_LEAST_DATE_TIME": {
+   "en": "At least until {dt_to} (extension possible)",
+   "de": "Mindestens bis {dt_to} (Verlängerung möglich)",
+   "fr": "Au moins jusqu’au {dt_to} (prolongation possible)",
+   "it": "Almeno fino al {dt_to} (possibile proroga)"
+  },
+  "UNTIL_APPROX_DATE_TIME": {
+   "en": "Approx. until {t_to} (forecast may change)",
+   "de": "Bis ca. {t_to} (Prognose kann ändern)",
+   "fr": "Jusqu’à env. {t_to} (prévision susceptible d’évoluer)",
+   "it": "Fino alle {t_to} circa (previsione soggetta a modifiche)"
+  },
+  "FROM_TO": {
+   "en": "From {t_from} to {t_to}",
+   "de": "Von {t_from} bis {t_to}",
+   "fr": "De {t_from} à {t_to}",
+   "it": "Dalle {t_from} alle {t_to}"
+  }
+ },
+ "UPDATED_AGO": {
+  "just": {
+   "en": "Just updated",
+   "de": "Soeben aktualisiert",
+   "fr": "Mis à jour à l’instant",
+   "it": "Appena aggiornato"
+  },
+  "minutes": {
+   "en": "Updated {n} min ago",
+   "de": "Vor {n} Min. aktualisiert",
+   "fr": "Mis à jour il y a {n} min",
+   "it": "Aggiornato {n} min fa"
+  },
+  "hours": {
+   "en": "Updated {n} h ago",
+   "de": "Vor {n} Std. aktualisiert",
+   "fr": "Mis à jour il y a {n} h",
+   "it": "Aggiornato {n} h fa"
+  },
+  "stamp": {
+   "en": "Updated {n}",
+   "de": "Aktualisiert {n}",
+   "fr": "Mis à jour le {n}",
+   "it": "Aggiornato il {n}"
+  }
+ }
+}

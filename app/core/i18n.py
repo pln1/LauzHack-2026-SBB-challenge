@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
+from app.core.resources import load_resource
 
 LANGS = ("en", "de", "fr", "it")
 TZ = ZoneInfo("Europe/Zurich")
@@ -20,48 +21,27 @@ def pick(i18n: dict | None, lang: str, default: str = "") -> str:
     return i18n.get(lang) or i18n.get("en") or i18n.get("de") or next(iter(i18n.values()), default) or default
 
 
-STATUS_LABELS = {
-    "ACTIVE": {"en": "Interrupted service", "de": "Unterbruch", "fr": "Interruption", "it": "Interruzione"},
-    "RESTRICTED": {"en": "Limited service", "de": "Einschränkung", "fr": "Trafic restreint", "it": "Limitazioni"},
-    "RESUMED": {"en": "Service resumed", "de": "Betrieb wiederaufgenommen", "fr": "Trafic rétabli", "it": "Circolazione ripristinata"},
-}
+_R = load_resource("i18n")
+STATUS_LABELS = _R["STATUS_LABELS"]
 
-SBB_LINKS = {
-    "en": {
-        "timetable": "https://www.sbb.ch/en",
-        "traffic": "https://www.sbb.ch/en/plan/rail-traffic-information?poiid=1283280",
-        "refund": "https://www.sbb.ch/en/help-and-contact/refunds-compensation/refunds-compensation/compensation-for-delays.html",
-    },
-    "de": {
-        "timetable": "https://www.sbb.ch/de",
-        "traffic": "https://www.sbb.ch/de/reiseinformationen/bahnverkehrsinfo/betriebslage-stoerungen.html?poiid=719144",
-        "refund": "https://www.sbb.ch/de/hilfe-und-kontakt/erstattung-entschaedigung/rueckerstattung/entschaedigung-bei-verspaetung.html",
-    },
-    "fr": {
-        "timetable": "https://www.sbb.ch/fr",
-        "traffic": "https://www.sbb.ch/fr/planifier/information-trafic-ferroviaire?poiid=1274174",
-        "refund": "https://www.sbb.ch/fr/aide-et-contact/remboursement-indemnisation/remboursements-indemnisations/indemnisation-cas-retard.html",
-    },
-    "it": {
-        "timetable": "https://www.sbb.ch/it",
-        "traffic": "https://www.sbb.ch/it/pianificare/informazioni-traffico-ferroviario?poiid=1256950",
-        "refund": "https://www.sbb.ch/it/aiuto-e-contatto/rimborso-indennita/rimborsi-indennita/indennita-caso-ritardo.html",
-    },
-}
+SBB_LINKS = _R["SBB_LINKS"]
 
-LINK_LABELS = {
-    "timetable": {"en": "Search route in SBB timetable ↗", "de": "Strecke im SBB Fahrplan suchen ↗", "fr": "Chercher le trajet dans l’horaire CFF ↗", "it": "Cerca il percorso nell’orario FFS ↗"},
-    "traffic": {"en": "Official SBB live status ↗", "de": "Offizielle SBB Betriebslage ↗", "fr": "Info trafic officielle CFF ↗", "it": "Info traffico ufficiale FFS ↗"},
-    "refund": {"en": "Delay compensation on SBB.ch ↗", "de": "Entschädigung bei Verspätung ↗", "fr": "Indemnisation en cas de retard ↗", "it": "Indennità in caso di ritardo ↗"},
-}
+LINK_LABELS = _R["LINK_LABELS"]
 
 
-def sbb_link(kind: str, lang: str, origin: str | None = None, destination: str | None = None) -> dict:
+def sbb_link(kind: str, lang: str, origin: str | None = None, destination: str | None = None,
+             when: datetime | None = None) -> dict:
+    """Official sbb.ch link. A timetable link carries the date and time the app shows for the incident (``when``: the
+    incident's own, already shifted, reference time) so SBB.ch opens on the same moment, not on the browser's "now"."""
     lang = norm_lang(lang)
     url = SBB_LINKS[lang][kind]
     if kind == "timetable" and origin and destination:
+        q = {"von": origin, "nach": destination}
+        if when is not None:
+            local = when.astimezone(TZ)
+            q.update({"datum": local.strftime("%d.%m.%Y"), "zeit": local.strftime("%H:%M")})
         url += "&" if "?" in url else "?"
-        url += urlencode({"von": origin, "nach": destination})
+        url += urlencode(q)
     return {"type": "sbb_link", "kind": kind, "url": url, "label": LINK_LABELS[kind][lang]}
 
 
@@ -81,27 +61,23 @@ def _fmt_dt(dt: datetime | None) -> str:
 
 
 def forecast_label(duration_type: str | None, duration_from: datetime | None, duration_to: datetime | None,
-                   at_least: str | None) -> dict:
-    """Human readable expected end of the disruption, in all four languages."""
+                   at_least: str | None, with_date: bool = False, ref: datetime | None = None) -> dict:
+    """Human readable expected end of the disruption, in all four languages.
+
+    Live incidents are replayed "today", so a bare clock time is unambiguous. Dataset incidents belong to their own day
+    (Sept 2026): with ``with_date`` every time carries its date (``01.09. 09:00``); ``ref`` supplies the date for an
+    "at least until HH:MM" value that has none of its own."""
     d = duration_type or "UNKNOWN"
     t_to, dt_to, t_from = _fmt_time(duration_to), _fmt_dt(duration_to), _fmt_time(duration_from)
     at = (at_least or "")[:5] or t_to
-    table = {
-        "ENDED": {"en": "Service resumed — residual delays possible", "de": "Betrieb wiederaufgenommen — vereinzelt Verspätungen möglich",
-                  "fr": "Trafic rétabli — retards résiduels possibles", "it": "Circolazione ripristinata — possibili ritardi residui"},
-        "UNKNOWN": {"en": "End not yet known (under assessment)", "de": "Dauer unbekannt (wird abgeklärt)",
-                    "fr": "Durée inconnue (en cours d’évaluation)", "it": "Durata sconosciuta (in valutazione)"},
-        "NONE": {"en": "No end time communicated", "de": "Keine Dauer kommuniziert", "fr": "Aucune durée communiquée", "it": "Nessuna durata comunicata"},
-        "UNTIL": {"en": f"Until {t_to}", "de": f"Bis {t_to}", "fr": f"Jusqu’à {t_to}", "it": f"Fino alle {t_to}"},
-        "UNTIL_DATE": {"en": f"Until {dt_to}", "de": f"Bis {dt_to}", "fr": f"Jusqu’au {dt_to}", "it": f"Fino al {dt_to}"},
-        "UNTIL_AT_LEAST": {"en": f"At least until {at} (extension possible)", "de": f"Mindestens bis {at} (Verlängerung möglich)",
-                           "fr": f"Au moins jusqu’à {at} (prolongation possible)", "it": f"Almeno fino alle {at} (possibile proroga)"},
-        "UNTIL_AT_LEAST_DATE_TIME": {"en": f"At least until {dt_to} (extension possible)", "de": f"Mindestens bis {dt_to} (Verlängerung möglich)",
-                                     "fr": f"Au moins jusqu’au {dt_to} (prolongation possible)", "it": f"Almeno fino al {dt_to} (possibile proroga)"},
-        "UNTIL_APPROX_DATE_TIME": {"en": f"Approx. until {t_to} (forecast may change)", "de": f"Bis ca. {t_to} (Prognose kann ändern)",
-                                   "fr": f"Jusqu’à env. {t_to} (prévision susceptible d’évoluer)", "it": f"Fino alle {t_to} circa (previsione soggetta a modifiche)"},
-        "FROM_TO": {"en": f"From {t_from} to {t_to}", "de": f"Von {t_from} bis {t_to}", "fr": f"De {t_from} à {t_to}", "it": f"Dalle {t_from} alle {t_to}"},
-    }
+    if with_date:
+        t_to, t_from = dt_to, _fmt_dt(duration_from)
+        day = next((x for x in (duration_to, duration_from, ref) if x), None)
+        if at_least and day:
+            at = f"{day.astimezone(TZ).strftime('%d.%m.')} {at}"
+        elif not at_least:
+            at = dt_to
+    table = {k: {l: v.format(t_to=t_to, dt_to=dt_to, t_from=t_from, at=at) for l, v in tpl.items()} for k, tpl in _R["FORECAST_LABELS"].items()}
     if d in ("UNTIL", "FROM_TO", "UNTIL_DATE", "UNTIL_APPROX_DATE_TIME", "UNTIL_AT_LEAST_DATE_TIME") and duration_to is None:
         d = "UNKNOWN"
     if d == "UNTIL_AT_LEAST" and not (at_least or duration_to):
@@ -118,33 +94,15 @@ def updated_ago(ts: datetime | None, lang: str, now: datetime | None = None) -> 
     if delta < timedelta(seconds=0):
         delta = timedelta(0)
     mins = int(delta.total_seconds() // 60)
+    u = _R["UPDATED_AGO"]
     if mins < 1:
-        return {"en": "Just updated", "de": "Soeben aktualisiert", "fr": "Mis à jour à l’instant", "it": "Appena aggiornato"}[lang]
+        return u["just"][lang]
     if mins < 60:
-        return {"en": f"Updated {mins} min ago", "de": f"Vor {mins} Min. aktualisiert", "fr": f"Mis à jour il y a {mins} min", "it": f"Aggiornato {mins} min fa"}[lang]
+        return u["minutes"][lang].format(n=mins)
     if mins < 24 * 60:
-        h = mins // 60
-        return {"en": f"Updated {h} h ago", "de": f"Vor {h} Std. aktualisiert", "fr": f"Mis à jour il y a {h} h", "it": f"Aggiornato {h} h fa"}[lang]
-    stamp = ts.astimezone(TZ).strftime("%d.%m.%Y %H:%M")
-    return {"en": f"Updated {stamp}", "de": f"Aktualisiert {stamp}", "fr": f"Mis à jour le {stamp}", "it": f"Aggiornato il {stamp}"}[lang]
+        return u["hours"][lang].format(n=mins // 60)
+    return u["stamp"][lang].format(n=ts.astimezone(TZ).strftime("%d.%m.%Y %H:%M"))
 
 
-SCENARIOS = [
-    {"slug": "missed_connection", "icon": "⏱️",
-     "title": {"en": "I might miss my connection", "de": "Ich verpasse meinen Anschluss", "fr": "Je risque de rater ma correspondance", "it": "Rischio di perdere la coincidenza"},
-     "description": {"en": "Connection risk check, next train & ticket validity", "de": "Anschlussprüfung, nächster Zug & Ticketgültigkeit",
-                     "fr": "Vérification de correspondance, train suivant & billet", "it": "Verifica coincidenza, prossimo treno e validità biglietto"}},
-    {"slug": "detour_route", "icon": "🧭",
-     "title": {"en": "How do I take a detour?", "de": "Wie kann ich die Störung umfahren?", "fr": "Comment contourner la perturbation ?", "it": "Come posso fare una deviazione?"},
-     "description": {"en": "Alternative line, Bahnersatz bus & route on map", "de": "Alternativstrecke, Bahnersatzbus & Karte",
-                     "fr": "Ligne alternative, bus de remplacement & carte", "it": "Linea alternativa, bus sostitutivo e percorso su mappa"}},
-    {"slug": "refund_compensation", "icon": "💳",
-     "title": {"en": "Refunds & compensation", "de": "Rückerstattung & Entschädigung", "fr": "Remboursement & indemnisation", "it": "Rimborsi e indennizzi"},
-     "description": {"en": "Ticket refund rules & 60+ min delay claims", "de": "Bedingungen für Erstattung & Verspätung ab 60 Min.",
-                     "fr": "Règles de remboursement & retard de 60+ min", "it": "Regole di rimborso e indennizzo per ritardi 60+ min"}},
-    {"slug": "status_timeline", "icon": "📡",
-     "title": {"en": "What happened & how long?", "de": "Was ist passiert und wie lange?", "fr": "Que s’est-il passé et pour combien de temps ?", "it": "Cosa è successo e quanto durerà?"},
-     "description": {"en": "Forecast reliability & whether to wait at the station", "de": "Prognose-Zuverlässigkeit & Empfehlung am Bahnhof",
-                     "fr": "Fiabilité des prévisions & conseil en gare", "it": "Affidabilità della previsione e consigli in stazione"}},
-]
+SCENARIOS = _R["SCENARIOS"]
 SCENARIO_SLUGS = {s["slug"] for s in SCENARIOS}

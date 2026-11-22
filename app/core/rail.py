@@ -292,3 +292,69 @@ def get_network() -> RailNetwork | None:
         return None
     data = json.loads(path.read_text())
     return RailNetwork([[tuple(p) for p in line] for line in data["lines"]], data.get("source", ""))
+
+
+# ---- bus routes on roads and helpers to keep a detour visibly apart from the disrupted track
+ROAD_CACHE = Path(PROJECT_ROOT / "data" / "road_cache.json")
+
+
+def overlap_share(route: list[Point], track: list[Point], tol_m: float = 60.0) -> float:
+    """Share (0..1) of the route's length that lies within tol_m of the track."""
+    pts = list(route)
+    if len(pts) < 2 or len(track) < 2:
+        return 0.0
+    near = total = 0.0
+    for a, b in zip(pts, pts[1:]):
+        w = dist_m(a, b)
+        m = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+        total += w
+        if any(_project(m, t0, t1)[2] <= tol_m for t0, t1 in zip(track, track[1:])):
+            near += w
+    return near / total if total else 0.0
+
+
+def offset_line(points: list[Point], metres: float) -> list[Point]:
+    """The polyline shifted sideways (to the left of its direction of travel) by ``metres``."""
+    pts = _dedupe(list(points))
+    if len(pts) < 2:
+        return pts
+    out: list[Point] = []
+    for i, p in enumerate(pts):
+        a, b = pts[max(i - 1, 0)], pts[min(i + 1, len(pts) - 1)]
+        kx, ky = _k(p[0])
+        dx, dy = (b[1] - a[1]) * kx, (b[0] - a[0]) * ky
+        n = math.hypot(dx, dy) or 1.0
+        out.append((p[0] + (dx / n) * metres / ky, p[1] - (dy / n) * metres / kx))
+    return out
+
+
+def road_route(a: Point, b: Point, timeout: float = 6.0) -> list[Point] | None:
+    """Driving route a->b from an OSRM server (road network, for replacement buses). Cached in data/road_cache.json.
+    Returns None when routing is switched off (ROAD_ROUTING=false), unreachable or the answer is implausible."""
+    import os
+    key = f"{a[0]:.4f},{a[1]:.4f};{b[0]:.4f},{b[1]:.4f}"
+    cache: dict = {}
+    try:
+        cache = json.loads(ROAD_CACHE.read_text()) if ROAD_CACHE.exists() else {}
+    except Exception:  # noqa: BLE001
+        cache = {}
+    if key in cache:
+        return [tuple(p) for p in cache[key]] if cache[key] else None
+    if os.environ.get("ROAD_ROUTING", "true").lower() in ("0", "false", "no"):
+        return None
+    base = os.environ.get("OSRM_URL", "https://router.project-osrm.org").rstrip("/")
+    try:
+        import httpx
+        r = httpx.get(f"{base}/route/v1/driving/{a[1]:.5f},{a[0]:.5f};{b[1]:.5f},{b[0]:.5f}",
+                      params={"overview": "full", "geometries": "geojson"}, timeout=timeout)
+        r.raise_for_status()
+        line = [(c[1], c[0]) for c in r.json()["routes"][0]["geometry"]["coordinates"]]
+    except Exception:  # noqa: BLE001 - offline or blocked: the caller draws an offset line instead; not cached
+        return None
+    ok = len(line) >= 2 and path_length_m(line) <= max(2.5 * dist_m(a, b), 3000)
+    cache[key] = [list(p) for p in line] if ok else []
+    try:
+        ROAD_CACHE.write_text(json.dumps(cache))
+    except Exception:  # noqa: BLE001
+        pass
+    return line if ok else None

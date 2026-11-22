@@ -1,0 +1,19 @@
+{
+ "STATUS_COLORS": {
+  "ACTIVE": "#EB0000",
+  "RESTRICTED": "#F59E0B",
+  "RESUMED": "#10B981"
+ },
+ "DETOUR_COLOR": "#059669",
+ "BUS_COLOR": "#2563EB",
+ "SWITZERLAND_BOUNDS": [
+  [
+   45.8,
+   5.9
+  ],
+  [
+   47.85,
+   10.55
+  ]
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "BUS_DETOUR": {
+  "en": "Replacement buses (Bahnersatz) run between {a} and {b}. Follow the «Bahnersatz» signs at the station; your ticket is valid on the bus.",
+  "de": "Bahnersatzbusse verkehren zwischen {a} und {b}. Folgen Sie der Signalisation «Bahnersatz» am Bahnhof; Ihr Billett gilt im Bus.",
+  "fr": "Des bus de remplacement circulent entre {a} et {b}. Suivez la signalétique «Bahnersatz» en gare ; votre billet est valable dans le bus.",
+  "it": "Bus sostitutivi (Bahnersatz) circolano tra {a} e {b}. Segui la segnaletica «Bahnersatz» in stazione; il biglietto è valido sul bus."
+ },
+ "RESUMED_ACTION": {
+  "en": "Service has resumed. Isolated delays are still possible; travel as planned.",
+  "de": "Der Betrieb ist wieder aufgenommen. Vereinzelt sind Verspätungen möglich; reisen Sie wie geplant.",
+  "fr": "Le trafic est rétabli. Des retards isolés restent possibles ; voyagez comme prévu.",
+  "it": "La circolazione è ripristinata. Sono ancora possibili ritardi isolati; viaggia come previsto."
+ },
+ "BUS_SUFFIX": {
+  "en": "🚌 Replacement bus",
+  "de": "🚌 Bahnersatz",
+  "fr": "🚌 Bus de remplacement",
+  "it": "🚌 Bus sostitutivo"
+ },
+ "SYNTH_BUS": {
+  "en": "TCC update: replacement buses (Bahnersatz) now operating between {a} and {b}.",
+  "de": "Update TCC: Bahnersatzbusse verkehren jetzt zwischen {a} und {b}.",
+  "fr": "Mise à jour TCC : des bus de remplacement circulent désormais entre {a} et {b}.",
+  "it": "Aggiornamento TCC: bus sostitutivi (Bahnersatz) ora in servizio tra {a} e {b}."
+ },
+ "SYNTH_FORECAST": {
+  "en": "Forecast refined: service expected to resume at approx. {hhmm}.",
+  "de": "Prognose präzisiert: Wiederaufnahme voraussichtlich ca. {hhmm}.",
+  "fr": "Prévision affinée : reprise prévue vers {hhmm}.",
+  "it": "Previsione aggiornata: ripresa prevista verso le {hhmm}."
+ },
+ "NO_FURTHER_UPDATES": {
+  "en": "No further updates: service has already resumed.",
+  "de": "Keine weiteren Updates: Der Betrieb läuft wieder.",
+  "fr": "Aucune mise à jour : le trafic est déjà rétabli.",
+  "it": "Nessun aggiornamento: la circolazione è già ripristinata."
+ }
+}

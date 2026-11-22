@@ -1,359 +1,16 @@
 // =========================================================================
     // 1. UI TRANSLATIONS (EN default + DE / FR / IT)
     // =========================================================================
-    const I18N = {
-      EN: {
-        tagline: 'Turn disruption data into your best next move',
-        themeEnableDark: 'Enable dark theme', themeEnableLight: 'Enable light theme',
-        liveMode: 'Live: Today',
-        demoMode: 'Dataset: Sept 2026',
-        simUpdate: 'Simulate update',
-        toastBadge: 'New SBB Update',
-        toastAction: 'Open action plan',
-        kpiActiveTitle: 'Active disruptions now',
-        kpiActiveSub: 'Show interrupted services',
-        kpiBusTitle: 'Replacement buses',
-        kpiBusSub: 'Show bus replacement services',
-        kpiUnknownTitle: 'Uncertain forecast',
-        kpiUnknownSub: 'Show uncertain end times',
-        kpiResumedTitle: 'Service resumed',
-        kpiResumedSub: 'Show resumed services',
-        searchPlaceholder: 'Search station, canton, or line (e.g. Genève or IC3)',
-        searchHelp: 'Search results update as you type.',
-        filterAll: 'All events',
-        filterActive: 'Critical / Interrupted',
-        filterRestricted: 'Limited service',
-        filterBus: '🚌 Replacement bus',
-        filterResumed: 'Resumed',
-        listHeading: "Today's disruptions & incidents",
-        listHint: 'Select a card to choose next actions',
-        forecastUncertain: 'Time estimate uncertain',
-        replacementBusBadge: 'Replacement bus',
-        cantonLabel: 'Canton',
-        cardActionBtn: 'What to do now',
-        mapHeading: 'Interactive SBB Disruption Map',
-        legendInterrupted: 'Interrupted',
-        legendRestricted: 'Restricted',
-        legendDetour: 'Detour',
-        legendBus: 'Replacement bus',
-        resetMapBtn: 'All Switzerland',
-        overlayBtnText: 'Resolve my trip',
-        showSelectedIncident: 'Show selected disruption',
-        hideSelectedIncident: 'Hide selected incident card',
-        sbbBannerTitle: 'Direct link to official SBB.ch services',
-        sbbBannerSub: 'Route search, live traffic information & delay compensation',
-        serviceNavDisruptions: 'Disruptions',
-        serviceNavMap: 'Network map',
-        sbbTimetableLink: 'Search route in SBB timetable ↗',
-        sbbTrafficLink: 'SBB traffic information ↗',
-        sbbRefundLink: 'Delay compensation ↗',
-        auditHeading: 'Incident update timeline (SBB data evolution)',
-        collapse: 'Collapse',
-        expand: 'Expand',
-        scenariosHeading: '1. Select your situation for a personalized action plan:',
-        scMissedTitle: 'I might miss my connection',
-        scMissedDesc: 'Connection risk check, next train & ticket validity',
-        scDetourTitle: 'How do I take a detour?',
-        scDetourDesc: 'Alternative line, Bahnersatz bus & route on map',
-        scRefundTitle: 'Refunds & compensation',
-        scRefundDesc: 'Ticket refund rules & 60+ min delay claims',
-        scStatusTitle: 'What happened & how long?',
-        scStatusDesc: 'Forecast reliability & whether to wait at the station',
-        chatHeading: '2. Interactive decision assistant',
-        inChatUpdateBtn: '⚡ Test: new update in chat',
-        chatPlaceholder: "Specify your destination or ask (e.g. 'Heading to Geneva Airport with a Supersaver ticket')...",
-        chatSendBtn: 'Send',
-        quickAssessTitle: 'Quick assessment of your trip:',
-        clarifyDirection: 'Confirm your travel direction:',
-        showDetourMapBtn: '🗺️ Show detour on map',
-        displayDetourMapBtn: '🗺️ Display detour route on map',
-        openSbbBtn: 'Open SBB.ch ↗',
-        checkSbbBtn: 'Check SBB Timetable ↗',
-        refundSbbBtn: 'Claim refund on SBB.ch ↗',
-        liveStatusSbbBtn: 'Official SBB live status ↗',
-        linesLabel: 'Lines',
-        actualBadge: 'Latest',
-        detourPopupTitle: 'Recommended detour route',
-        popupBtn: 'Action plan & detour →',
-        emptyTitle: 'No active disruptions match your filter',
-        emptySub: 'Try clearing the search query or selecting another status filter.',
-        emptyResetBtn: 'Show all events today',
-        sbbUrlBase: 'https://www.sbb.ch/en',
-        sbbUrlRefund: 'https://www.sbb.ch/en/help-and-contact/refunds-compensation/refunds-compensation/compensation-for-delays.html',
-        sbbUrlTraffic: 'https://www.sbb.ch/en/plan/rail-traffic-information?poiid=1283280'
-      },
-      DE: {
-        tagline: 'Von Störungsdaten zu Ihrer besten nächsten Entscheidung',
-        themeEnableDark: 'Dunkles Design aktivieren', themeEnableLight: 'Helles Design aktivieren',
-        liveMode: 'Live: Heute',
-        demoMode: 'Datensatz: Sept. 2026',
-        simUpdate: 'Update simulieren',
-        toastBadge: 'Neues SBB-Update',
-        toastAction: 'Massnahmenplan öffnen',
-        kpiActiveTitle: 'Aktuelle Störungen',
-        kpiActiveSub: 'Unterbrochene Verbindungen anzeigen',
-        kpiBusTitle: 'Bahnersatzbusse',
-        kpiBusSub: 'Ersatzbusse anzeigen',
-        kpiUnknownTitle: 'Unsichere Prognose',
-        kpiUnknownSub: 'Unsichere Endzeiten anzeigen',
-        kpiResumedTitle: 'Betrieb wiederaufgenommen',
-        kpiResumedSub: 'Wiederaufgenommene Verbindungen anzeigen',
-        searchPlaceholder: 'Bahnhof, Kanton oder Linie suchen (z. B. Genève oder IC3)',
-        searchHelp: 'Die Ergebnisse werden während der Eingabe aktualisiert.',
-        filterAll: 'Alle Ereignisse',
-        filterActive: 'Unterbruch / Kritisch',
-        filterRestricted: 'Einschränkung',
-        filterBus: '🚌 Bahnersatz',
-        filterResumed: 'Behoben',
-        listHeading: 'Heutige Störungen & Ereignisse',
-        listHint: 'Karte wählen für nächste Schritte',
-        forecastUncertain: 'Zeitangabe unsicher',
-        replacementBusBadge: 'Ersatzbus',
-        cantonLabel: 'Kanton',
-        cardActionBtn: 'Was jetzt tun',
-        mapHeading: 'Interaktive SBB-Störungskarte',
-        legendInterrupted: 'Unterbruch',
-        legendRestricted: 'Eingeschränkt',
-        legendDetour: 'Umleitung',
-        legendBus: 'Ersatzbus',
-        resetMapBtn: 'Ganze Schweiz',
-        overlayBtnText: 'Reise lösen',
-        showSelectedIncident: 'Ausgewählte Störung anzeigen',
-        hideSelectedIncident: 'Ausgewählte Störung ausblenden',
-        sbbBannerTitle: 'Direktverbindung zu offiziellen SBB.ch-Diensten',
-        sbbBannerSub: 'Verbindungssuche, aktuelle Betriebslage & Entschädigung bei Verspätung',
-        serviceNavDisruptions: 'Störungen',
-        serviceNavMap: 'Streckenkarte',
-        sbbTimetableLink: 'Strecke im SBB Fahrplan suchen ↗',
-        sbbTrafficLink: 'SBB Betriebslage ↗',
-        sbbRefundLink: 'Entschädigung bei Verspätung ↗',
-        auditHeading: 'Verlauf der Störungsmeldungen (SBB-Datenentwicklung)',
-        collapse: 'Einklappen',
-        expand: 'Ausklappen',
-        scenariosHeading: '1. Wählen Sie Ihre Situation für einen persönlichen Plan:',
-        scMissedTitle: 'Ich verpasse meinen Anschluss',
-        scMissedDesc: 'Anschlussprüfung, nächster Zug & Ticketgültigkeit',
-        scDetourTitle: 'Wie kann ich die Störung umfahren?',
-        scDetourDesc: 'Alternativstrecke, Bahnersatzbus & Karte',
-        scRefundTitle: 'Rückerstattung & Entschädigung',
-        scRefundDesc: 'Bedingungen für Erstattung & Verspätung ab 60 Min.',
-        scStatusTitle: 'Was ist passiert und wie lange?',
-        scStatusDesc: 'Prognose-Zuverlässigkeit & Empfehlung am Bahnhof',
-        chatHeading: '2. Interaktiver Entscheidungsassistent',
-        inChatUpdateBtn: '⚡ Test: neues Update im Chat',
-        chatPlaceholder: "Zielbahnhof angeben oder fragen (z.B. 'Reise zum Flughafen Genf mit Sparbillett')...",
-        chatSendBtn: 'Senden',
-        quickAssessTitle: 'Schnelleinschätzung Ihrer Reise:',
-        clarifyDirection: 'Bestätigen Sie Ihre Reiserichtung:',
-        showDetourMapBtn: '🗺️ Umleitung auf Karte zeigen',
-        displayDetourMapBtn: '🗺️ Umleitungsroute auf Karte anzeigen',
-        openSbbBtn: 'SBB.ch öffnen ↗',
-        checkSbbBtn: 'Im SBB Fahrplan prüfen ↗',
-        refundSbbBtn: 'Rückerstattung auf SBB.ch ↗',
-        liveStatusSbbBtn: 'Offizielle SBB Betriebslage ↗',
-        linesLabel: 'Linien',
-        actualBadge: 'Aktuell',
-        detourPopupTitle: 'Empfohlene Umleitungsroute',
-        popupBtn: 'Massnahmen & Umleitung →',
-        emptyTitle: 'Keine aktiven Störungen für diesen Filter',
-        emptySub: 'Suchbegriff löschen oder einen anderen Statusfilter wählen.',
-        emptyResetBtn: 'Alle heutigen Ereignisse zeigen',
-        sbbUrlBase: 'https://www.sbb.ch/de',
-        sbbUrlRefund: 'https://www.sbb.ch/de/hilfe-und-kontakt/erstattung-entschaedigung/rueckerstattung/entschaedigung-bei-verspaetung.html',
-        sbbUrlTraffic: 'https://www.sbb.ch/de/reiseinformationen/bahnverkehrsinfo/betriebslage-stoerungen.html?poiid=719144'
-      },
-      FR: {
-        tagline: 'Des données de perturbation à votre meilleure prochaine décision',
-        themeEnableDark: 'Activer le thème sombre', themeEnableLight: 'Activer le thème clair',
-        liveMode: "En direct : Aujourd'hui",
-        demoMode: 'Jeu de données : Sept. 2026',
-        simUpdate: 'Simuler une mise à jour',
-        toastBadge: 'Nouvelle info CFF',
-        toastAction: "Ouvrir le plan d'action",
-        kpiActiveTitle: 'Perturbations actives',
-        kpiActiveSub: 'Afficher les lignes interrompues',
-        kpiBusTitle: 'Bus de remplacement',
-        kpiBusSub: 'Afficher les bus de remplacement',
-        kpiUnknownTitle: 'Durée estimée incertaine',
-        kpiUnknownSub: 'Afficher les horaires incertains',
-        kpiResumedTitle: 'Trafic rétabli',
-        kpiResumedSub: 'Afficher les lignes rétablies',
-        searchPlaceholder: 'Rechercher une gare, un canton ou une ligne (ex. Genève ou IC3)',
-        searchHelp: 'Les résultats se mettent à jour pendant la saisie.',
-        filterAll: 'Tous les événements',
-        filterActive: 'Interruption / Critique',
-        filterRestricted: 'Trafic restreint',
-        filterBus: '🚌 Bus de remplacement',
-        filterResumed: 'Rétabli',
-        listHeading: "Perturbations et incidents du jour",
-        listHint: 'Sélectionnez une carte pour choisir une action',
-        forecastUncertain: 'Durée estimée incertaine',
-        replacementBusBadge: 'Bus de remplacement',
-        cantonLabel: 'Canton',
-        cardActionBtn: 'Que faire maintenant',
-        mapHeading: 'Carte interactive des perturbations CFF',
-        legendInterrupted: 'Interrompu',
-        legendRestricted: 'Restreint',
-        legendDetour: 'Déviation',
-        legendBus: 'Bus de remplacement',
-        resetMapBtn: 'Toute la Suisse',
-        overlayBtnText: 'Résoudre mon trajet',
-        showSelectedIncident: 'Afficher la perturbation sélectionnée',
-        hideSelectedIncident: 'Masquer la perturbation sélectionnée',
-        sbbBannerTitle: 'Lien direct vers les services officiels CFF.ch',
-        sbbBannerSub: 'Recherche de trajet, situation du trafic et indemnisation en cas de retard',
-        serviceNavDisruptions: 'Perturbations',
-        serviceNavMap: 'Carte du réseau',
-        sbbTimetableLink: 'Chercher le trajet dans l’horaire CFF ↗',
-        sbbTrafficLink: 'Situation du trafic CFF ↗',
-        sbbRefundLink: 'Indemnisation en cas de retard ↗',
-        auditHeading: 'Chronologie des mises à jour (évolution des données CFF)',
-        collapse: 'Réduire',
-        expand: 'Développer',
-        scenariosHeading: '1. Choisissez votre situation pour un plan personnalisé :',
-        scMissedTitle: 'Je risque de rater ma correspondance',
-        scMissedDesc: 'Vérification de correspondance, train suivant & billet',
-        scDetourTitle: 'Comment contourner la perturbation ?',
-        scDetourDesc: 'Ligne alternative, bus de remplacement & carte',
-        scRefundTitle: 'Remboursement & indemnisation',
-        scRefundDesc: 'Règles de remboursement & retard de 60+ min',
-        scStatusTitle: 'Que s’est-il passé et pour combien de temps ?',
-        scStatusDesc: 'Fiabilité des prévisions & conseil en gare',
-        chatHeading: '2. Assistant décisionnel interactif',
-        inChatUpdateBtn: '⚡ Test : nouvelle info dans le chat',
-        chatPlaceholder: "Précisez votre destination ou posez une question (ex. 'Vers Genève-Aéroport avec billet dégriffé')...",
-        chatSendBtn: 'Envoyer',
-        quickAssessTitle: 'Évaluation rapide de votre trajet :',
-        clarifyDirection: 'Confirmez votre direction :',
-        showDetourMapBtn: '🗺️ Voir la déviation sur la carte',
-        displayDetourMapBtn: '🗺️ Afficher l’itinéraire de déviation sur la carte',
-        openSbbBtn: 'Ouvrir CFF.ch ↗',
-        checkSbbBtn: 'Vérifier dans l’horaire CFF ↗',
-        refundSbbBtn: 'Demander un remboursement CFF ↗',
-        liveStatusSbbBtn: 'Info trafic officielle CFF ↗',
-        linesLabel: 'Lignes',
-        actualBadge: 'Actuel',
-        detourPopupTitle: 'Itinéraire de déviation recommandé',
-        popupBtn: "Plan d'action & déviation →",
-        emptyTitle: 'Aucune perturbation active pour ce filtre',
-        emptySub: 'Effacez la recherche ou choisissez un autre statut.',
-        emptyResetBtn: 'Afficher tous les événements du jour',
-        sbbUrlBase: 'https://www.sbb.ch/fr',
-        sbbUrlRefund: 'https://www.sbb.ch/fr/aide-et-contact/remboursement-indemnisation/remboursements-indemnisations/indemnisation-cas-retard.html',
-        sbbUrlTraffic: 'https://www.sbb.ch/fr/planifier/information-trafic-ferroviaire?poiid=1274174'
-      },
-      IT: {
-        tagline: 'Dai dati sulle perturbazioni alla tua migliore prossima mossa',
-        themeEnableDark: 'Attiva il tema scuro', themeEnableLight: 'Attiva il tema chiaro',
-        liveMode: 'Live: Oggi',
-        demoMode: 'Dataset: Sett. 2026',
-        simUpdate: 'Simula aggiornamento',
-        toastBadge: 'Nuovo aggiornamento FFS',
-        toastAction: 'Apri piano d’azione',
-        kpiActiveTitle: 'Perturbazioni attive ora',
-        kpiActiveSub: 'Mostra le tratte interrotte',
-        kpiBusTitle: 'Bus sostitutivi',
-        kpiBusSub: 'Mostra i bus sostitutivi',
-        kpiUnknownTitle: 'Previsione incerta',
-        kpiUnknownSub: 'Mostra gli orari incerti',
-        kpiResumedTitle: 'Circolazione ripristinata',
-        kpiResumedSub: 'Mostra le tratte ripristinate',
-        searchPlaceholder: 'Cerca stazione, cantone o linea (es. Genève o IC3)',
-        searchHelp: 'I risultati si aggiornano durante la digitazione.',
-        filterAll: 'Tutti gli eventi',
-        filterActive: 'Interruzione / Critico',
-        filterRestricted: 'Limitazioni',
-        filterBus: '🚌 Bus sostitutivo',
-        filterResumed: 'Ripristinato',
-        listHeading: 'Perturbazioni e guasti di oggi',
-        listHint: 'Seleziona una scheda per scegliere le azioni',
-        forecastUncertain: 'Durata stimata incerta',
-        replacementBusBadge: 'Bus sostitutivo',
-        cantonLabel: 'Cantone',
-        cardActionBtn: 'Cosa fare ora',
-        mapHeading: 'Mappa interattiva delle perturbazioni FFS',
-        legendInterrupted: 'Interrotto',
-        legendRestricted: 'Limitato',
-        legendDetour: 'Deviazione',
-        legendBus: 'Bus sostitutivo',
-        resetMapBtn: 'Tutta la Svizzera',
-        overlayBtnText: 'Risolvi il viaggio',
-        showSelectedIncident: 'Mostra la perturbazione selezionata',
-        hideSelectedIncident: 'Nascondi la perturbazione selezionata',
-        sbbBannerTitle: 'Collegamento diretto ai servizi ufficiali FFS.ch',
-        sbbBannerSub: 'Ricerca del percorso, situazione del traffico e indennità per ritardo',
-        serviceNavDisruptions: 'Perturbazioni',
-        serviceNavMap: 'Mappa della rete',
-        sbbTimetableLink: 'Cerca il percorso nell’orario FFS ↗',
-        sbbTrafficLink: 'Situazione del traffico FFS ↗',
-        sbbRefundLink: 'Indennità per ritardo ↗',
-        auditHeading: 'Cronologia aggiornamenti (evoluzione dati FFS)',
-        collapse: 'Comprimi',
-        expand: 'Espandi',
-        scenariosHeading: '1. Seleziona la tua situazione per un piano personalizzato:',
-        scMissedTitle: 'Rischio di perdere la coincidenza',
-        scMissedDesc: 'Verifica coincidenza, prossimo treno e validità biglietto',
-        scDetourTitle: 'Come posso fare una deviazione?',
-        scDetourDesc: 'Linea alternativa, bus sostitutivo e percorso su mappa',
-        scRefundTitle: 'Rimborsi e indennizzi',
-        scRefundDesc: 'Regole di rimborso e indennizzo per ritardi 60+ min',
-        scStatusTitle: 'Cosa è successo e quanto durerà?',
-        scStatusDesc: 'Affidabilità della previsione e consigli in stazione',
-        chatHeading: '2. Assistente decisionale interattivo',
-        inChatUpdateBtn: '⚡ Test: nuovo aggiornamento in chat',
-        chatPlaceholder: "Indica la destinazione o chiedi (es. 'Vado a Genève-Aéroport con biglietto risparmio')...",
-        chatSendBtn: 'Invia',
-        quickAssessTitle: 'Valutazione rapida del tuo viaggio:',
-        clarifyDirection: 'Conferma la direzione di viaggio:',
-        showDetourMapBtn: '🗺️ Mostra deviazione sulla mappa',
-        displayDetourMapBtn: '🗺️ Visualizza percorso alternativo sulla mappa',
-        openSbbBtn: 'Apri FFS.ch ↗',
-        checkSbbBtn: 'Controlla nell’orario FFS ↗',
-        refundSbbBtn: 'Richiedi rimborso su FFS.ch ↗',
-        liveStatusSbbBtn: 'Info traffico ufficiale FFS ↗',
-        linesLabel: 'Linee',
-        actualBadge: 'Attuale',
-        detourPopupTitle: 'Percorso alternativo consigliato',
-        popupBtn: 'Piano d’azione e deviazione →',
-        emptyTitle: 'Nessuna perturbazione attiva per questo filtro',
-        emptySub: 'Cancella la ricerca o seleziona un altro filtro di stato.',
-        emptyResetBtn: 'Mostra tutti gli eventi di oggi',
-        sbbUrlBase: 'https://www.sbb.ch/it',
-        sbbUrlRefund: 'https://www.sbb.ch/it/aiuto-e-contatto/rimborso-indennita/rimborsi-indennita/indennita-caso-ritardo.html',
-        sbbUrlTraffic: 'https://www.sbb.ch/it/pianificare/informazioni-traffico-ferroviario?poiid=1256950'
-      }
-    };
-    const I18N_EXTRA = {
-      EN: { loading: 'Loading…', apiError: 'Could not reach the server. Retrying…', noUpdates: 'No further updates for this incident.',
-            allDays: 'All days', contextHeading: 'Official messages & operational context', officialMessages: 'Official SBB messages',
-            opsContext: 'Operational context (sanitized: internal ticker & VIA)', noMessages: 'No official messages published yet.',
-            correlation: 'Data linking', engineGemini: 'AI-synthesised (Gemini) · facts checked by SBB rules', engineDet: 'SBB rule engine',
-            sessionRestored: 'Conversation restored.', listHeadingDataset: 'September 2026 dataset', myRoute: 'My route: ',
-            simTarget: 'Simulated update for', sourcePUBLIC: 'Public ticker', sourceVIA: 'VIA', sourceINTERNAL: 'Internal ticker',
-            pending: 'more updates queued', thinking: 'Thinking…', aiRefining: '✨ Refining with Gemini…', noCoords: "No map coordinates for this incident (card only).", unmappedNote: "{n} incident(s) without coordinates are not shown on the map.", noDetour: "No detour route available for this incident.", approxRoute: "Approximate route: not every stretch could be matched to the rail network.", busLabel: "Replacement bus", busApprox: "Schematic bus line: road route unavailable offline, drawn beside the track." },
-      DE: { loading: 'Wird geladen…', apiError: 'Server nicht erreichbar. Neuer Versuch…', noUpdates: 'Keine weiteren Updates für diese Störung.',
-            allDays: 'Alle Tage', contextHeading: 'Offizielle Meldungen & Betriebslage', officialMessages: 'Offizielle SBB-Meldungen',
-            opsContext: 'Betriebskontext (bereinigt: interner Ticker & VIA)', noMessages: 'Noch keine offiziellen Meldungen publiziert.',
-            correlation: 'Datenverknüpfung', engineGemini: 'KI-Synthese (Gemini) · Fakten durch SBB-Regeln geprüft', engineDet: 'SBB-Regelwerk',
-            sessionRestored: 'Unterhaltung wiederhergestellt.', listHeadingDataset: 'Datensatz September 2026', myRoute: 'Meine Strecke: ',
-            simTarget: 'Simuliertes Update für', sourcePUBLIC: 'Öffentlicher Ticker', sourceVIA: 'VIA', sourceINTERNAL: 'Interner Ticker',
-            pending: 'weitere Updates in Warteschlange', thinking: 'Einen Moment…', aiRefining: '✨ Gemini verfeinert…', noCoords: "Für diese Störung liegen keine Koordinaten vor, daher keine Kartenanzeige.", unmappedNote: "{n} Störung(en) ohne Koordinaten werden nicht auf der Karte gezeigt.", noDetour: "Für diese Störung ist keine Umleitung verfügbar.", approxRoute: "Ungefähre Route: nicht jeder Abschnitt konnte dem Schienennetz zugeordnet werden.", busLabel: "Bahnersatzbus", busApprox: "Schematische Buslinie: Strassenroute offline nicht verfügbar, neben der Bahn gezeichnet." },
-      FR: { loading: 'Chargement…', apiError: 'Serveur injoignable. Nouvelle tentative…', noUpdates: 'Plus de mise à jour pour cet incident.',
-            allDays: 'Tous les jours', contextHeading: 'Messages officiels & contexte opérationnel', officialMessages: 'Messages officiels CFF',
-            opsContext: 'Contexte opérationnel (nettoyé : ticker interne & VIA)', noMessages: 'Aucun message officiel publié pour l’instant.',
-            correlation: 'Liaison des données', engineGemini: 'Synthèse IA (Gemini) · faits vérifiés par les règles CFF', engineDet: 'Moteur de règles CFF',
-            sessionRestored: 'Conversation restaurée.', listHeadingDataset: 'Jeu de données septembre 2026', myRoute: 'Mon trajet : ',
-            simTarget: 'Mise à jour simulée pour', sourcePUBLIC: 'Ticker public', sourceVIA: 'VIA', sourceINTERNAL: 'Ticker interne',
-            pending: 'mises à jour en attente', thinking: 'Un instant…', aiRefining: '✨ Gemini affine la réponse…', noCoords: "Pas de coordonnées cartographiques pour cette perturbation.", unmappedNote: "{n} perturbation(s) sans coordonnées ne sont pas affichées sur la carte.", noDetour: "Aucun itinéraire de contournement disponible.", approxRoute: "Itinéraire approximatif : tous les tronçons n’ont pas pu être rattachés au réseau ferré.", busLabel: "Bus de remplacement", busApprox: "Ligne de bus schématique : itinéraire routier indisponible hors ligne, tracé à côté de la voie." },
-      IT: { loading: 'Caricamento…', apiError: 'Server non raggiungibile. Nuovo tentativo…', noUpdates: 'Nessun altro aggiornamento per questo evento.',
-            allDays: 'Tutti i giorni', contextHeading: 'Messaggi ufficiali e contesto operativo', officialMessages: 'Messaggi ufficiali FFS',
-            opsContext: 'Contesto operativo (ripulito: ticker interno e VIA)', noMessages: 'Nessun messaggio ufficiale pubblicato finora.',
-            correlation: 'Collegamento dati', engineGemini: 'Sintesi IA (Gemini) · fatti verificati con le regole FFS', engineDet: 'Motore di regole FFS',
-            sessionRestored: 'Conversazione ripristinata.', listHeadingDataset: 'Dataset settembre 2026', myRoute: 'Il mio percorso: ',
-            simTarget: 'Aggiornamento simulato per', sourcePUBLIC: 'Ticker pubblico', sourceVIA: 'VIA', sourceINTERNAL: 'Ticker interno',
-            pending: 'aggiornamenti in coda', thinking: 'Un momento…', aiRefining: '✨ Gemini sta affinando…', noCoords: "Nessuna coordinata sulla mappa per questo guasto.", unmappedNote: "{n} guasto/i senza coordinate non sono mostrati sulla mappa.", noDetour: "Nessun percorso alternativo disponibile.", approxRoute: "Percorso approssimativo: non tutti i tratti sono stati associati alla rete ferroviaria.", busLabel: "Bus sostitutivo", busApprox: "Linea bus schematica: percorso stradale non disponibile offline, disegnato accanto al binario." }
-    };
-    Object.keys(I18N_EXTRA).forEach(l => Object.assign(I18N[l], I18N_EXTRA[l]));
+    // UI text lives in static/i18n/{en,de,fr,it}.json (flat key -> text map per language); edit those files to change wording.
+    const I18N = { EN: {}, DE: {}, FR: {}, IT: {} };
+    async function loadI18n() {
+      await Promise.all(Object.keys(I18N).map(async l => {
+        try {
+          const res = await fetch(`/static/i18n/${l.toLowerCase()}.json`, { cache: 'no-cache' });
+          if (res.ok) I18N[l] = await res.json();
+        } catch (e) { console.warn('[SBB] translations', l, e); }
+      }));
+    }
 
     // =========================================================================
     // 2. STATE & API CLIENT
@@ -377,6 +34,7 @@
       sessionId: null,
       renderedMessageIds: new Set(),
       selectedRouteChip: null,
+      datasetDates: [],
       busy: false
     };
     const ACCESSIBILITY_PREFS_KEY = 'sbb_accessibility_preferences';
@@ -430,6 +88,7 @@
     // 3. INITIALISATION & LEAFLET MAP
     // =========================================================================
     window.addEventListener('DOMContentLoaded', async () => {
+      await loadI18n();
       applyAccessibilitySettings();
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && !document.getElementById('accessibility-panel').classList.contains('hidden')) {
@@ -439,6 +98,7 @@
       initSwissMap();
       applyStaticTranslations();
       await loadDashboard(true);
+      loadDatasetDates();
       pollTimer = setInterval(pollLive, 20000);
     });
 
@@ -839,6 +499,13 @@
       if (names.length >= 2) {
         url.searchParams.set('von', names[0]);
         url.searchParams.set('nach', names[names.length - 1]);
+        const when = inc && inc.updatedAt ? new Date(inc.updatedAt) : null;   // same moment the cards show (live: now, dataset: its own day)
+        if (when && !isNaN(when)) {
+          const f = new Intl.DateTimeFormat('de-CH', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+          const p = Object.fromEntries(f.formatToParts(when).map(x => [x.type, x.value]));
+          url.searchParams.set('datum', `${p.day}.${p.month}.${p.year}`);
+          url.searchParams.set('zeit', `${p.hour}:${p.minute}`);
+        }
       }
       return url.toString();
     }
@@ -896,7 +563,8 @@
       document.documentElement.lang = state.lang.toLowerCase();
       applyAccessibilityLabels();
       const set = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
-      set('header-tagline', 'tagline'); set('mode-live-label', 'liveMode'); set('mode-demo-label', 'demoMode');
+      set('header-tagline', 'tagline'); set('mode-live-label', 'liveMode'); updateDatasetLabel();
+      if (window.applyPanelLayout) applyPanelLayout();   // refresh the panel button/handle labels in the new language
       set('sim-update-label', 'simUpdate'); set('toast-badge', 'toastBadge'); set('live-toast-action', 'toastAction');
       set('nav-disruptions', 'serviceNavDisruptions'); set('nav-map', 'serviceNavMap');
       set('kpi-active-title', 'kpiActiveTitle'); set('kpi-active-sub', 'kpiActiveSub'); set('kpi-bus-title', 'kpiBusTitle');
@@ -991,7 +659,29 @@
       setStatusFilter('ALL');
     }
 
+    // "Dataset: 01.–03.09.2026" built from the days that really are in the data, instead of a fixed text.
+    function datasetRangeText(dates) {
+      if (!dates || !dates.length) return '';
+      const fmt = d => d.split('-').reverse().join('.');
+      const first = dates[0], last = dates[dates.length - 1];
+      if (first === last) return fmt(first);
+      const [fy, fm, fd] = first.split('-'), [ly, lm, ld] = last.split('-');
+      return fy === ly && fm === lm ? `${fd}.–${ld}.${lm}.${ly}` : `${fmt(first)} – ${fmt(last)}`;
+    }
+    function updateDatasetLabel() {
+      const el = document.getElementById('mode-demo-label');
+      if (!el) return;
+      const r = datasetRangeText(state.datasetDates);
+      el.textContent = r ? t('demoModeRange').replace('{range}', r) : t('demoMode');
+    }
+    async function loadDatasetDates() {
+      try { state.datasetDates = (await api(`/incidents?mode=dataset&limit=1&lang=${apiLang()}`)).availableDates || []; updateDatasetLabel(); }
+      catch (e) { console.warn('[SBB] dataset dates', e); }
+    }
+
     function renderDateOptions(dates) {
+      state.datasetDates = dates;
+      updateDatasetLabel();
       const sel = document.getElementById('date-select');
       const current = state.dateFilter;
       sel.innerHTML = `<option value="">${escapeHtml(t('allDays'))}</option>` +

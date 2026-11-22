@@ -18,23 +18,15 @@ from app.schemas.dtos import (
     DashboardResponseDto, IncidentDetailDto, IncidentMessageDto, IncidentSummaryDto, KpiDto, MapGeometry,
     OperationalSummaryDto, TimelineEntryDto,
 )
+from app.core.resources import load_resource
 
 log = logging.getLogger("incidents")
 
 LIVE_STALE_AFTER = timedelta(hours=6)
 
-BUS_DETOUR = {
-    "en": "Replacement buses (Bahnersatz) run between {a} and {b}. Follow the «Bahnersatz» signs at the station; your ticket is valid on the bus.",
-    "de": "Bahnersatzbusse verkehren zwischen {a} und {b}. Folgen Sie der Signalisation «Bahnersatz» am Bahnhof; Ihr Billett gilt im Bus.",
-    "fr": "Des bus de remplacement circulent entre {a} et {b}. Suivez la signalétique «Bahnersatz» en gare ; votre billet est valable dans le bus.",
-    "it": "Bus sostitutivi (Bahnersatz) circolano tra {a} e {b}. Segui la segnaletica «Bahnersatz» in stazione; il biglietto è valido sul bus.",
-}
-RESUMED_ACTION = {
-    "en": "Service has resumed. Isolated delays are still possible; travel as planned.",
-    "de": "Der Betrieb ist wieder aufgenommen. Vereinzelt sind Verspätungen möglich; reisen Sie wie geplant.",
-    "fr": "Le trafic est rétabli. Des retards isolés restent possibles ; voyagez comme prévu.",
-    "it": "La circolazione è ripristinata. Sono ancora possibili ritardi isolati; viaggia come previsto.",
-}
+_R = load_resource("incident_texts")
+BUS_DETOUR = _R["BUS_DETOUR"]
+RESUMED_ACTION = _R["RESUMED_ACTION"]
 
 
 _CLOCK_RE = re.compile(r"\b([01]?\d|2[0-3])([:h.])([0-5]\d)\b")
@@ -75,7 +67,8 @@ def _at_least_shifted(inc: Incident, at_least: str | None) -> str | None:
 def effective_forecast(inc: Incident, snap: dict | None = None) -> dict:
     """Forecast label; recomputed with shifted times for live-mode incidents."""
     if inc.data_mode != "live" and snap is None:
-        return inc.forecast_label_i18n or forecast_label(inc.duration_type, inc.duration_from, inc.duration_to, inc.duration_at_least)
+        return inc.forecast_label_i18n or forecast_label(inc.duration_type, inc.duration_from, inc.duration_to, inc.duration_at_least,
+                                                          with_date=True, ref=inc.updated_at)
     src = snap or {}
     dtype = src.get("duration_type", inc.duration_type)
     d_from = src.get("duration_from") if snap else inc.duration_from
@@ -86,11 +79,11 @@ def effective_forecast(inc: Incident, snap: dict | None = None) -> dict:
         d_to = datetime.fromisoformat(d_to)
     at_least = src.get("duration_at_least") if snap else inc.duration_at_least
     if inc.data_mode != "live":
-        return forecast_label(dtype, d_from, d_to, at_least)
+        return forecast_label(dtype, d_from, d_to, at_least, with_date=True, ref=inc.updated_at)
     return forecast_label(dtype, shifted(inc, d_from), shifted(inc, d_to), _at_least_shifted(inc, at_least))
 
 
-BUS_SUFFIX = {"en": "🚌 Replacement bus", "de": "🚌 Bahnersatz", "fr": "🚌 Bus de remplacement", "it": "🚌 Bus sostitutivo"}
+BUS_SUFFIX = _R["BUS_SUFFIX"]
 
 
 def update_text(inc: Incident, u: IncidentUpdate, lang: str) -> str:
@@ -322,10 +315,7 @@ def _synthetic_update(inc: Incident, now: datetime) -> tuple[dict, dict] | None:
         snap = {"has_replacement_bus": True, "map_geometry": geo,
                 "detour_summary_i18n": {l: BUS_DETOUR[l].format(a=a, b=b) for l in LANGS},
                 "recommended_action_i18n": {l: BUS_DETOUR[l].format(a=a, b=b) for l in LANGS}}
-        text = {"en": f"TCC update: replacement buses (Bahnersatz) now operating between {a} and {b}.",
-                "de": f"Update TCC: Bahnersatzbusse verkehren jetzt zwischen {a} und {b}.",
-                "fr": f"Mise à jour TCC : des bus de remplacement circulent désormais entre {a} et {b}.",
-                "it": f"Aggiornamento TCC: bus sostitutivi (Bahnersatz) ora in servizio tra {a} e {b}."}
+        text = {l: _R["SYNTH_BUS"][l].format(a=a, b=b) for l in LANGS}
     elif is_uncertain(inc.duration_type):
         to = (now + timedelta(minutes=75)).replace(second=0, microsecond=0)
         to = to - timedelta(minutes=to.minute % 15)
@@ -333,10 +323,7 @@ def _synthetic_update(inc: Incident, now: datetime) -> tuple[dict, dict] | None:
         snap = {"duration_type": "UNTIL_APPROX_DATE_TIME", "duration_to": to_src.isoformat(), "duration_from": None,
                 "duration_at_least": None, "forecast_label_i18n": forecast_label("UNTIL_APPROX_DATE_TIME", None, to_src, None)}
         hhmm = to.astimezone(TZ).strftime("%H:%M")
-        text = {"en": f"Forecast refined: service expected to resume at approx. {hhmm}.",
-                "de": f"Prognose präzisiert: Wiederaufnahme voraussichtlich ca. {hhmm}.",
-                "fr": f"Prévision affinée : reprise prévue vers {hhmm}.",
-                "it": f"Previsione aggiornata: ripresa prevista verso le {hhmm}."}
+        text = {l: _R["SYNTH_FORECAST"][l].format(hhmm=hhmm) for l in LANGS}
     else:
         snap = {"status": "RESUMED", "duration_type": "ENDED", "has_replacement_bus": False,
                 "forecast_label_i18n": forecast_label("ENDED", None, None, None), "recommended_action_i18n": RESUMED_ACTION,
@@ -363,10 +350,7 @@ async def simulate_update(db: AsyncSession, incident_id: int, lang: str) -> tupl
     else:
         synth = _synthetic_update(inc, now)
         if synth is None:
-            return inc, False, "NONE", {"en": "No further updates: service has already resumed.",
-                                        "de": "Keine weiteren Updates: Der Betrieb läuft wieder.",
-                                        "fr": "Aucune mise à jour : le trafic est déjà rétabli.",
-                                        "it": "Nessun aggiornamento: la circolazione è già ripristinata."}[lang]
+            return inc, False, "NONE", _R["NO_FURTHER_UPDATES"][lang]
         snap, text = synth
         _apply_snapshot(inc, snap)
         version = inc.current_version + 1

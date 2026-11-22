@@ -13,10 +13,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.rail import dist_m, simplify
 from app.schemas.dtos import IncidentDetailDto, IncidentSummaryDto
 from app.services import incident_service as isvc
+from app.core.resources import load_resource
 
-STATUS_COLORS = {"ACTIVE": "#EB0000", "RESTRICTED": "#F59E0B", "RESUMED": "#10B981"}
-DETOUR_COLOR = "#059669"
-SWITZERLAND_BOUNDS = [[45.80, 5.90], [47.85, 10.55]]  # [[south, west], [north, east]]
+_R = load_resource("map_settings")
+STATUS_COLORS = _R["STATUS_COLORS"]
+DETOUR_COLOR = _R["DETOUR_COLOR"]
+BUS_COLOR = _R["BUS_COLOR"]
+SWITZERLAND_BOUNDS = _R["SWITZERLAND_BOUNDS"]
 
 
 def _valid(p: Any) -> bool:
@@ -96,9 +99,9 @@ def _detours(geo, inc, detailed: bool) -> list[dict]:
             continue
         if not detailed:
             route = _thin_for_overview(route)
-        out.append(_line(route, kind="detour", index=i, color=DETOUR_COLOR, incidentId=inc.id, title=inc.title,
+        out.append(_line(route, kind="detour", index=i, color=BUS_COLOR if d.get("kind") == "bus" else DETOUR_COLOR, incidentId=inc.id, title=inc.title,
                          label=d.get("label", ""), detourKind=d.get("kind", "via"), via=d.get("via") or [],
-                         approximate=bool(d.get("approximate")), lengthKm=d.get("lengthKm"), source=d.get("source", ""),
+                         approximate=bool(d.get("approximate")), lengthKm=d.get("lengthKm"), source=d.get("source", ""), stops=d.get("stops") or [],
                          summary=inc.detour_summary, bounds=bounds_of(route, 0.02)))
     if out:
         return out

@@ -17,10 +17,12 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.core.config import get_settings
+from app.core.resources import load_resource
 
 log = logging.getLogger("gemini")
 
-LANG_NAMES = {"en": "English", "de": "German (Swiss standard German, use 'ss' not 'ß')", "fr": "French", "it": "Italian"}
+_R = load_resource("gemini_texts")
+LANG_NAMES = _R["LANG_NAMES"]
 
 
 class TripContextPatch(BaseModel):
@@ -39,31 +41,10 @@ class AssistantDecisionSchema(BaseModel):
     trip_context_patch: TripContextPatch
 
 
-SYSTEM_INSTRUCTION = """You are the SBB Disruption Companion, a calm and empathetic assistant for rail passengers in
-Switzerland during a disruption. You turn operational data into the passenger's best next move.
-
-Hard rules:
-1. Answer ONLY in {language}. Station names stay as given.
-2. Use only facts from INCIDENT, UPDATES, OPERATIONAL_LOG and DETERMINISTIC_PLAN. Never invent train
-   departure times, platforms, train numbers or durations. If exact times are needed, tell the passenger
-   to use the SBB timetable link shown below your answer.
-3. SBB policy facts in DETERMINISTIC_PLAN are authoritative: keep refund percentages, ticket-validity
-   rules and forecast warnings exactly as stated there.
-4. If the forecast is uncertain (forecast_warning = true), say clearly that the end time may move and
-   advise against waiting at an intermediate station without a backup plan.
-5. Operational logs are internal staff notes: use them only to explain practical consequences
-   (e.g. where replacement buses stop, which lines are rerouted). Never mention staff, names, phone
-   numbers or internal systems.
-6. Be brief: 2 to 4 steps, each a short imperative sentence (max 25 words); summary_text max 30 words. You may use **bold** for key words.
-7. trip_context_patch: fill only fields the passenger explicitly mentioned in PASSENGER_MESSAGE; else null.
-8. intent: the scenario that best fits the passenger's message (or the requested scenario).
-"""
+SYSTEM_INSTRUCTION = _R["SYSTEM_INSTRUCTION"]
 
 VARIANTS = ("schema", "jsonschema", "json")  # Pydantic response_schema | raw JSON schema | JSON mime type + schema in the prompt
-JSON_HINT = ('Reply with ONE JSON object only: {"intent": "missed_connection|detour_route|refund_compensation|status_timeline|general", '
-             '"decision_title": str, "steps": [str, ...], "summary_text": str, "trip_context_patch": {"origin": str|null, '
-             '"destination": str|null, "ticket_type": "SUPERSAVER|POINT_TO_POINT|GA|HALF_FARE|DAY_PASS|OTHER|null", '
-             '"urgency": "LOW|MEDIUM|HIGH|null", "expected_delay_minutes": int|null}}')
+JSON_HINT = _R["JSON_HINT"]
 
 
 def build_prompt(context: dict, passenger_message: str | None, scenario: str | None, json_hint: bool = False) -> str:

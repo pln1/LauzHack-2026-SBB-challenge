@@ -31,7 +31,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
-from app.core.rail import dist_m, get_network, order_stations, path_length_m, simplify
+from app.core.rail import offset_line, overlap_share, road_route, dist_m, get_network, order_stations, path_length_m, simplify
 from app.core.geo import Station, StationIndex, distance_km
 from app.core.timeshift import aligned_shift, shift_ts
 from app.core.i18n import LANGS, STATUS_LABELS, forecast_label, is_uncertain
@@ -43,6 +43,7 @@ from app.etl.loaders import find_one, parse_ts, read_csv, to_int, to_py
 from app.services.text_utils import (
     extract_lines, mentions_bus, sanitize_operational, split_line_list, strip_html,
 )
+from app.core.resources import load_resource
 
 log = logging.getLogger("etl")
 
@@ -50,20 +51,10 @@ LIVE_ID_OFFSET = 10_000_000_000_000  # live copies of a dataset incident
 KULT_ID_OFFSET = 3_000_000_000  # incidents that only exist in the internal KULT ticker
 
 # English names for internal category codes that are not in the public reason table
-EXTRA_REASON_EN = {
-    "EK_IT_STOERUNG": "IT disruption",
-    "EK_VERMISSTMELDUNG": "Missing person report",
-}
+_R = load_resource("pipeline_texts")
+EXTRA_REASON_EN = _R["EXTRA_REASON_EN"]
 
-INFOBOARD_TITLES = {
-    "INFOBOARD_TITLE_STOERUNGSBESCHRIEB": "Disruption description",
-    "INFOBOARD_TITLE_BETRIEBSKONZEPT_FERN": "Operating concept (long-distance)",
-    "INFOBOARD_TITLE_BETRIEBSKONZEPT_REGIONAL": "Operating concept (regional)",
-    "INFOBOARD_TITLE_BETRIEBSKONZEPT_GUETER": "Operating concept (freight)",
-    "INFOBOARD_TITLE_KUNDENINFORMATION": "Customer information",
-    "INFOBOARD_TITLE_KULANZMASNAHMEN": "Goodwill measures",
-    "INFOBOARD_TITLE_BAHNERSATZ": "Rail replacement",
-}
+INFOBOARD_TITLES = _R["INFOBOARD_TITLES"]
 
 SPLIT_STATIONS_RE = re.compile(r"\s+[-–]\s+|\s+(?:and|und|et|e)\s+")
 
@@ -162,12 +153,7 @@ TRAVEL_RE = re.compile(
     r"Passengers travelling between (?P<a>.+?) and (?P<b>.+?) (?:(?:travel|go) via (?P<via>[^.]+)|(?P<bus>use the replacement bus))",
     re.I,
 )
-GUIDANCE_PREFIX = {
-    "en": ("passengers", "use ", "travel "),
-    "de": ("reisende", "fahrgäste"),
-    "fr": ("les voyageu", "voyageu"),
-    "it": ("i viaggiatori", "viaggiatori"),
-}
+GUIDANCE_PREFIX = {l: tuple(v) for l, v in _R["GUIDANCE_PREFIX"].items()}  # str.startswith needs a tuple
 
 
 def _guidance_lines(description: dict) -> dict:
@@ -185,38 +171,9 @@ def _guidance_lines(description: dict) -> dict:
     return out
 
 
-GENERIC_ACTION = {
-    "ACTIVE": {
-        "en": "Trains are not running on this section. Do not wait at intermediate stations: check alternative connections in the SBB timetable before you set off.",
-        "de": "Auf diesem Abschnitt verkehren keine Züge. Warten Sie nicht an Zwischenbahnhöfen: Prüfen Sie vor der Abfahrt Alternativen im SBB Fahrplan.",
-        "fr": "Aucun train ne circule sur ce tronçon. N’attendez pas dans une gare intermédiaire : vérifiez les alternatives dans l’horaire CFF avant de partir.",
-        "it": "Su questa tratta i treni non circolano. Non attendere in stazioni intermedie: verifica le alternative nell’orario FFS prima di partire.",
-    },
-    "RESTRICTED": {
-        "en": "Trains are running with restrictions. Expect delays and cancellations and check your connection in the SBB timetable.",
-        "de": "Züge verkehren eingeschränkt. Rechnen Sie mit Verspätungen und Ausfällen und prüfen Sie Ihre Verbindung im SBB Fahrplan.",
-        "fr": "Le trafic est restreint. Attendez-vous à des retards et suppressions et vérifiez votre correspondance dans l’horaire CFF.",
-        "it": "La circolazione è limitata. Prevedi ritardi e soppressioni e verifica il collegamento nell’orario FFS.",
-    },
-    "RESUMED": {
-        "en": "Service has resumed. Isolated delays are still possible; travel as planned.",
-        "de": "Der Betrieb ist wieder aufgenommen. Vereinzelt sind Verspätungen möglich; reisen Sie wie geplant.",
-        "fr": "Le trafic est rétabli. Des retards isolés restent possibles ; voyagez comme prévu.",
-        "it": "La circolazione è ripristinata. Sono ancora possibili ritardi isolati; viaggia come previsto.",
-    },
-}
-NO_DETOUR = {
-    "en": "No official detour has been published yet. Use the SBB timetable to find alternative connections.",
-    "de": "Es wurde noch keine offizielle Umleitung publiziert. Nutzen Sie den SBB Fahrplan für alternative Verbindungen.",
-    "fr": "Aucune déviation officielle n’a encore été publiée. Consultez l’horaire CFF pour des alternatives.",
-    "it": "Non è ancora stata pubblicata una deviazione ufficiale. Usa l’orario FFS per collegamenti alternativi.",
-}
-BUS_DETOUR = {
-    "en": "Replacement buses (Bahnersatz) run between {a} and {b}. Follow the «Bahnersatz» signs at the station; your ticket is valid on the bus.",
-    "de": "Bahnersatzbusse verkehren zwischen {a} und {b}. Folgen Sie der Signalisation «Bahnersatz» am Bahnhof; Ihr Billett gilt im Bus.",
-    "fr": "Des bus de remplacement circulent entre {a} et {b}. Suivez la signalétique «Bahnersatz» en gare ; votre billet est valable dans le bus.",
-    "it": "Bus sostitutivi (Bahnersatz) circolano tra {a} e {b}. Segui la segnaletica «Bahnersatz» in stazione; il biglietto è valido sul bus.",
-}
+GENERIC_ACTION = _R["GENERIC_ACTION"]
+NO_DETOUR = _R["NO_DETOUR"]
+BUS_DETOUR = _R["BUS_DETOUR"]
 
 
 # --------------------------------------------------------------------------- loading
@@ -510,8 +467,9 @@ def _detour_and_routes(description: dict, stations: list[Station], idx: StationI
     return routes[:4], detour, bus_pair, specs[:8]
 
 
-MAX_TRACK_DETOUR = 3.0   # a routed track longer than this x the straight distance is rejected (bad snap / wrong lookup)
-MAX_DETOUR_FACTOR = 4.0
+_RS = load_resource("routing_settings")
+MAX_TRACK_DETOUR = _RS["MAX_TRACK_DETOUR"]
+MAX_DETOUR_FACTOR = _RS["MAX_DETOUR_FACTOR"]
 
 
 def _thin(points: list, limit: int) -> list:
@@ -524,12 +482,13 @@ def _thin(points: list, limit: int) -> list:
     return [[round(p[0], 5), round(p[1], 5)] for p in pts]
 
 
-MAX_VIA_KM = 45.0       # a "via" station farther than this from the disruption is not a local detour
-MAX_DETOUR_KM = 140.0
-MAX_DETOURS = 2         # at most one rail alternative and one replacement bus per incident
+MAX_VIA_KM = _RS["MAX_VIA_KM"]
+MAX_DETOUR_KM = _RS["MAX_DETOUR_KM"]
+BUS_OFFSET_M = _RS["BUS_OFFSET_M"]
+MAX_DETOURS = _RS["MAX_DETOURS"]
 
 
-def _local_detours(net, ordered: list, blocked: set, specs: list[dict]) -> list[dict]:
+def _local_detours(net, ordered: list, blocked: set, specs: list[dict], track: list | None = None) -> list[dict]:
     """Detours for the disrupted section itself: they start and end at the disruption's end stations.
 
     The texts describe passengers' whole journeys ("Genève-Aéroport and Biel travel via Bern"); drawing those would put long
@@ -545,12 +504,11 @@ def _local_detours(net, ordered: list, blocked: set, specs: list[dict]) -> list[
         names, pts = sp["names"], [tuple(p) for p in sp["points"]]
         if sp["kind"] == "bus":
             if bus is None:
-                r = net.route_through([A, B])
-                ok = r.ok and r.length_m <= max(3 * direct, 3000)
-                bus = {"label": f"{sp['names'][0]} → {sp['names'][-1]}" if len(ordered) < 2 else sp["label"], "kind": "bus", "via": [],
-                       "from": names[0], "to": names[-1], "route": _thin(r.points if ok else [A, B], 260),
-                       "source": "rail" if ok else "straight", "approximate": not ok,
-                       "lengthKm": round((r.length_m if ok else direct) / 1000, 1)}
+                road = road_route(A, B)
+                route, src = (road, "road") if road else (offset_line(track or [A, B], BUS_OFFSET_M), "offset")
+                bus = {"label": sp["label"], "kind": "bus", "via": [], "from": names[0], "to": names[-1],
+                       "route": _thin(route, 260), "source": src, "approximate": src != "road",
+                       "lengthKm": round(path_length_m(route) / 1000, 1), "stops": [list(route[0]), list(route[-1])]}
             continue
         keep = [(n, p) for n, p in zip(names[1:-1], pts[1:-1]) if dist_m(p, mid) / 1000 <= max(MAX_VIA_KM, direct / 1000 * 3)]
         if not keep:
@@ -558,6 +516,8 @@ def _local_detours(net, ordered: list, blocked: set, specs: list[dict]) -> list[
         wps = [A] + [p for _, p in keep] + [B]
         r = net.route_through(wps, blocked)
         if not r.ok or r.length_m > min(max(10 * direct, 60_000), MAX_DETOUR_KM * 1000):
+            continue
+        if track and overlap_share(r.points, track) > 0.3:   # a detour must not run on the disrupted line
             continue
         via_opts.append({"label": sp["label"], "kind": "via", "via": [n for n, _ in keep], "from": names[0], "to": names[-1],
                          "route": _thin(r.points, 260), "source": "rail", "approximate": False, "lengthKm": round(r.length_m / 1000, 1)})
@@ -584,7 +544,7 @@ def _rail_geometry(pts: list[list[float]], specs: list[dict] | None) -> dict:
         out["trackLengthKm"] = round(r.length_m / 1000, 1)
         out["trackSnapMeters"] = round(r.snap_m)
         blocked = net.edges_of(r.nodes)
-    out["detours"] = _local_detours(net, ordered, blocked, specs or [])
+    out["detours"] = _local_detours(net, ordered, blocked, specs or [], [tuple(p) for p in out["track"]])
     return out
 
 
@@ -664,7 +624,7 @@ def derive_public_state(c: Cluster, v: PublicVersion, idx: StationIndex, reasons
         "duration_from": v.d_from.isoformat() if v.d_from else None,
         "duration_to": v.d_to.isoformat() if v.d_to else None,
         "duration_at_least": v.at_least,
-        "forecast_label_i18n": forecast_label(dtype, v.d_from, v.d_to, v.at_least),
+        "forecast_label_i18n": forecast_label(dtype, v.d_from, v.d_to, v.at_least, with_date=True, ref=v.ts),
         "has_replacement_bus": bool(has_bus),
         "affected_lines": lines,
         "affected_stations": [s.name for s in stations],
@@ -716,9 +676,7 @@ def derive_via_state(c: Cluster, upto_idx: int, reasons: dict) -> dict:
         "duration_type": dtype,
         "duration_type_raw": None,
         "duration_from": None, "duration_to": None, "duration_at_least": None,
-        "forecast_label_i18n": forecast_label(dtype, None, None, None) if ended else {
-            "en": "End not communicated (VIA)", "de": "Ende nicht kommuniziert (VIA)",
-            "fr": "Fin non communiquée (VIA)", "it": "Fine non comunicata (VIA)"},
+        "forecast_label_i18n": forecast_label(dtype, None, None, None) if ended else _R["END_NOT_COMMUNICATED_VIA"],
         "has_replacement_bus": has_bus,
         "affected_lines": lines,
         "affected_stations": [s.name for s in stations],
@@ -773,11 +731,9 @@ def _timeline_text(state: dict, prev: dict | None) -> dict:
         if state["status"] != "RESUMED":
             parts.append(state["forecast_label_i18n"][lang])
         if state["has_replacement_bus"] and not (prev and prev["has_replacement_bus"]):
-            parts.append({"en": "🚌 Replacement bus announced", "de": "🚌 Bahnersatz angekündigt",
-                          "fr": "🚌 Bus de remplacement annoncé", "it": "🚌 Bus sostitutivo annunciato"}[lang])
+            parts.append(_R["BUS_ANNOUNCED"][lang])
         if prev and state["affected_lines"] != prev["affected_lines"] and state["affected_lines"]:
-            parts.append(("Lines" if lang == "en" else "Linien" if lang == "de" else "Lignes" if lang == "fr" else "Linee")
-                         + ": " + ", ".join(state["affected_lines"][:8]))
+            parts.append(_R["LINES_WORD"][lang] + ": " + ", ".join(state["affected_lines"][:8]))
         out[lang] = " — ".join(p for p in parts if p)
     return out
 

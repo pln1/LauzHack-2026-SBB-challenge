@@ -51,7 +51,7 @@
     .kpi-card:focus-visible, .filter-chip:focus-visible, .incident-card:focus-visible { outline: 3px solid #005FCC; outline-offset: 3px; }
     .filter-chip[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--sbb-brand-red); }
     .workspace-grid { align-items: start; }
-    #map-section { display: grid; gap: 12px; align-content: start; }
+    #map-section { display: grid; gap: 16px; align-content: start; overflow: visible; }
     .line-chip, .forecast-line, .status-badge, .service-badge, .version-tag { font-variant-numeric: tabular-nums; }
     #kpi-active, #kpi-bus, #kpi-unknown, #kpi-resumed, .version-tag { font-variant-numeric: tabular-nums; }
     .incident-card { border-radius: 16px; }
@@ -202,9 +202,6 @@
     html.dark-theme:not(.accessibility-contrast) .station-label { background: rgba(32,37,41,.94); color: #f1f3f4; border-color: #566168; }
     html.dark-theme:not(.accessibility-contrast) .sbb-section-link { color: #f1f3f4; }
     html.dark-theme:not(.accessibility-contrast) .sbb-section-link:hover { color: #ff5252; }
-    @media (min-width: 1280px) and (min-height: 850px) {
-      #map-section { position: sticky; top: 16px; }
-    }
     @media (max-width: 1023px) {
       #map-section { order: -1; }
       #map-selected-shell { grid-row: 1; }
@@ -227,4 +224,45 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
       .incident-card:hover { transform: none; }
+    }
+
+    /* ---- incident list panel: resizable splitter (docked) or free-floating window ---- */
+    .list-splitter { display: none; }
+    .list-panel__grip { display: none; }
+    @media (min-width: 1024px) {
+      .workspace-grid { grid-template-columns: var(--list-w, 42%) 10px minmax(0, 1fr); gap: 0 10px; }
+      .workspace-grid.list-floating { grid-template-columns: minmax(0, 1fr); }
+      .workspace-grid.list-floating .list-splitter { display: none; }
+      .list-splitter { display: block; align-self: stretch; min-height: 120px; border-radius: 6px; cursor: col-resize; background: transparent; position: relative; touch-action: none; }
+      .list-splitter::after { content: ""; position: absolute; left: 3px; right: 3px; top: 0; bottom: 0; border-radius: 3px; background: #CBD5E1; opacity: .35; transition: opacity .15s, background .15s; }
+      .list-splitter:hover::after, .list-splitter:focus-visible::after { opacity: 1; background: #EB0000; }
+      .list-panel { min-width: 0; }
+      .list-panel__head { cursor: default; user-select: none; }
+      .list-panel.is-floating { position: fixed; z-index: 35; display: flex; flex-direction: column; gap: 12px; padding: 12px; background: #F5F7FA; border: 1px solid #CBD5E1; border-radius: 16px; box-shadow: 0 18px 50px rgba(15, 23, 42, .28); overflow: hidden; }
+      .list-panel.is-floating .list-panel__head { cursor: move; touch-action: none; }
+      .list-panel.is-floating .list-panel__body { flex: 1 1 auto; overflow-y: auto; min-height: 0; padding-right: 4px; }
+      .list-panel.is-floating .list-panel__grip { display: block; position: absolute; right: 2px; bottom: 2px; width: 22px; height: 22px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 50%, #94A3B8 50%, #94A3B8 58%, transparent 58%, transparent 70%, #94A3B8 70%, #94A3B8 78%, transparent 78%); }
+      #map-section { grid-column: 3; }
+      .workspace-grid.list-floating #map-section { grid-column: 1; }
+    }
+    @media (max-width: 1023px) { #panel-float-btn, #panel-splitter { display: none !important; } }
+    html.dark-theme:not(.accessibility-contrast) .list-panel.is-floating { background: #15191c; border-color: #3c4043; }
+
+    /* ---- docked list: fixed width; its height follows the right column (set by panel.js), own scroll bar ---- */
+    @media (min-width: 1024px) {
+      .workspace-grid:not(.list-floating) { grid-template-columns: var(--list-fixed, 440px) minmax(0, 1fr); gap: 0 20px; align-items: start; }
+      .workspace-grid:not(.list-floating) .list-splitter { display: none; }
+      .workspace-grid:not(.list-floating) #map-section { grid-column: 2; align-self: start; }
+      .list-panel:not(.is-floating) {
+        align-self: start; height: var(--list-h, calc(100vh - 220px)); min-height: 320px;
+        display: flex; flex-direction: column; gap: 12px; overflow: hidden;
+      }
+      .list-panel:not(.is-floating) .list-panel__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; padding: 2px 6px 12px 2px; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #94A3B8 transparent; }
+      .list-panel:not(.is-floating) .list-panel__body::-webkit-scrollbar { width: 10px; }
+      .list-panel:not(.is-floating) .list-panel__body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+      .list-panel:not(.is-floating) .list-panel__body::-webkit-scrollbar-thumb:hover { background: #94A3B8; background-clip: content-box; }
+      html.dark-theme:not(.accessibility-contrast) .list-panel:not(.is-floating) .list-panel__body::-webkit-scrollbar-thumb { background: #566168; background-clip: content-box; }
+      /* both columns stay in view under the header while the page scrolls, as long as the right column fits on screen */
+      .workspace-grid.ws-sticky:not(.list-floating) .list-panel:not(.is-floating),
+      .workspace-grid.ws-sticky:not(.list-floating) #map-section { position: sticky; top: var(--sticky-top, 132px); }
     }

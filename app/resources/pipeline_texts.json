@@ -1,0 +1,84 @@
+{
+ "EXTRA_REASON_EN": {
+  "EK_IT_STOERUNG": "IT disruption",
+  "EK_VERMISSTMELDUNG": "Missing person report"
+ },
+ "INFOBOARD_TITLES": {
+  "INFOBOARD_TITLE_STOERUNGSBESCHRIEB": "Disruption description",
+  "INFOBOARD_TITLE_BETRIEBSKONZEPT_FERN": "Operating concept (long-distance)",
+  "INFOBOARD_TITLE_BETRIEBSKONZEPT_REGIONAL": "Operating concept (regional)",
+  "INFOBOARD_TITLE_BETRIEBSKONZEPT_GUETER": "Operating concept (freight)",
+  "INFOBOARD_TITLE_KUNDENINFORMATION": "Customer information",
+  "INFOBOARD_TITLE_KULANZMASNAHMEN": "Goodwill measures",
+  "INFOBOARD_TITLE_BAHNERSATZ": "Rail replacement"
+ },
+ "GUIDANCE_PREFIX": {
+  "en": [
+   "passengers",
+   "use ",
+   "travel "
+  ],
+  "de": [
+   "reisende",
+   "fahrgäste"
+  ],
+  "fr": [
+   "les voyageu",
+   "voyageu"
+  ],
+  "it": [
+   "i viaggiatori",
+   "viaggiatori"
+  ]
+ },
+ "GENERIC_ACTION": {
+  "ACTIVE": {
+   "en": "Trains are not running on this section. Do not wait at intermediate stations: check alternative connections in the SBB timetable before you set off.",
+   "de": "Auf diesem Abschnitt verkehren keine Züge. Warten Sie nicht an Zwischenbahnhöfen: Prüfen Sie vor der Abfahrt Alternativen im SBB Fahrplan.",
+   "fr": "Aucun train ne circule sur ce tronçon. N’attendez pas dans une gare intermédiaire : vérifiez les alternatives dans l’horaire CFF avant de partir.",
+   "it": "Su questa tratta i treni non circolano. Non attendere in stazioni intermedie: verifica le alternative nell’orario FFS prima di partire."
+  },
+  "RESTRICTED": {
+   "en": "Trains are running with restrictions. Expect delays and cancellations and check your connection in the SBB timetable.",
+   "de": "Züge verkehren eingeschränkt. Rechnen Sie mit Verspätungen und Ausfällen und prüfen Sie Ihre Verbindung im SBB Fahrplan.",
+   "fr": "Le trafic est restreint. Attendez-vous à des retards et suppressions et vérifiez votre correspondance dans l’horaire CFF.",
+   "it": "La circolazione è limitata. Prevedi ritardi e soppressioni e verifica il collegamento nell’orario FFS."
+  },
+  "RESUMED": {
+   "en": "Service has resumed. Isolated delays are still possible; travel as planned.",
+   "de": "Der Betrieb ist wieder aufgenommen. Vereinzelt sind Verspätungen möglich; reisen Sie wie geplant.",
+   "fr": "Le trafic est rétabli. Des retards isolés restent possibles ; voyagez comme prévu.",
+   "it": "La circolazione è ripristinata. Sono ancora possibili ritardi isolati; viaggia come previsto."
+  }
+ },
+ "NO_DETOUR": {
+  "en": "No official detour has been published yet. Use the SBB timetable to find alternative connections.",
+  "de": "Es wurde noch keine offizielle Umleitung publiziert. Nutzen Sie den SBB Fahrplan für alternative Verbindungen.",
+  "fr": "Aucune déviation officielle n’a encore été publiée. Consultez l’horaire CFF pour des alternatives.",
+  "it": "Non è ancora stata pubblicata una deviazione ufficiale. Usa l’orario FFS per collegamenti alternativi."
+ },
+ "BUS_DETOUR": {
+  "en": "Replacement buses (Bahnersatz) run between {a} and {b}. Follow the «Bahnersatz» signs at the station; your ticket is valid on the bus.",
+  "de": "Bahnersatzbusse verkehren zwischen {a} und {b}. Folgen Sie der Signalisation «Bahnersatz» am Bahnhof; Ihr Billett gilt im Bus.",
+  "fr": "Des bus de remplacement circulent entre {a} et {b}. Suivez la signalétique «Bahnersatz» en gare ; votre billet est valable dans le bus.",
+  "it": "Bus sostitutivi (Bahnersatz) circolano tra {a} e {b}. Segui la segnaletica «Bahnersatz» in stazione; il biglietto è valido sul bus."
+ },
+ "END_NOT_COMMUNICATED_VIA": {
+  "en": "End not communicated (VIA)",
+  "de": "Ende nicht kommuniziert (VIA)",
+  "fr": "Fin non communiquée (VIA)",
+  "it": "Fine non comunicata (VIA)"
+ },
+ "BUS_ANNOUNCED": {
+  "en": "🚌 Replacement bus announced",
+  "de": "🚌 Bahnersatz angekündigt",
+  "fr": "🚌 Bus de remplacement annoncé",
+  "it": "🚌 Bus sostitutivo annunciato"
+ },
+ "LINES_WORD": {
+  "en": "Lines",
+  "de": "Linien",
+  "fr": "Lignes",
+  "it": "Linee"
+ }
+}

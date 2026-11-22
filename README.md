@@ -155,6 +155,23 @@ Other interpretation choices:
   and clock times inside texts (08:00, 7h05) move by the same amount, so labels stay consistent. The live view is
   marked as a replay in `source_refs.replay`.
 
+### One time reference for all dates
+
+Live mode replays incidents "today": every stored time is shifted by the incident's own `time_shift_seconds`, so cards, "updated X ago", forecasts, timeline, chat answers and the sbb.ch timetable link all show the same moment. Dataset incidents keep their real day: their forecasts and times carry the date (`01.09. 09:00`), the "Dataset: ..." badge is built from the days really in the data, and the timetable link opens sbb.ch on the incident's own date and time (`datum`, `zeit`). SBB.ch itself only shows timetables for today and the future, so a dataset link may be adjusted by SBB.
+
+### Movable incident list
+
+The list on the left is its own panel: drag the splitter to change its width, or press "Detach panel" to float it as a window you can move (drag its header) and resize (corner grip). "Dock panel" puts it back; the choice is remembered.
+
+### Text and settings live in resource files
+
+No wording is hard-coded in the code any more:
+
+- **Frontend text:** `static/i18n/en.json`, `de.json`, `fr.json`, `it.json` (flat key to text, identical keys in all four). `static/js/app.js` loads them at start. Edit a file to change wording or add keys; a test checks the four files stay in sync.
+- **Backend text:** `app/resources/*.json` holds the assistant and decision-engine wording (`decision_texts.json`), status and forecast labels and sbb.ch links (`i18n.json`), ticker/ETL wording (`pipeline_texts.json`), incident and session texts, and the Gemini system instruction (`gemini_texts.json`). Each is read once through `app/core/resources.py`.
+- **Tunable settings:** `app/resources/map_settings.json` (status colours, default map bounds) and `routing_settings.json` (detour limits, bus offset).
+- Changing a resource file needs a container rebuild (`docker compose up -d --build`); detour limits also need a re-ingest.
+
 ### Map
 
 The base map needs **no API key**. It uses the free **swisstopo** pixel map (`wmts.geo.admin.ch`, grey by default,

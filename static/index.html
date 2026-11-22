@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBB Disruption Companion</title>
   <link rel="icon" type="image/webp" href="/static/sbb-logo.webp" />
-  <script src="/static/js/tailwind-config.js"></script>
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS (the config must load after the CDN script, which defines the global `tailwind`) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/js/tailwind-config.js"></script>
   <!-- Leaflet.js for Interactive Map of Switzerland -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -40,7 +40,7 @@
       </div>
 
       <!-- Data Mode Switch, Live Update Simulation & Language Selector -->
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div class="flex flex-wrap items-center justify-end ml-auto gap-2 sm:gap-3">
         <!-- Data Mode -->
         <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200" role="group">
           <button id="mode-live-btn" onclick="setDataMode('live')" class="min-h-10 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
@@ -93,7 +93,7 @@
     </div>
 
     <nav aria-label="Companion sections" class="border-t border-slate-100 bg-white">
-      <div class="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center gap-1 sm:gap-3 overflow-x-auto">
+      <div class="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center justify-start sm:justify-end gap-1 sm:gap-3 overflow-x-auto">
         <a id="nav-disruptions" href="#incident-list-section" class="sbb-section-link">Disruptions</a>
         <a id="nav-map" href="#map-section" class="sbb-section-link">Network map</a>
       </div>
@@ -225,24 +225,31 @@
     </section>
 
     <!-- WORKSPACE: DAILY INCIDENTS LIST (LEFT) + INTERACTIVE SWISS MAP (RIGHT) -->
-    <section class="workspace-grid grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+    <section class="workspace-grid grid grid-cols-1 gap-5 items-start">
 
       <!-- LEFT COLUMN: DAILY DISRUPTION CARDS -->
-      <div id="incident-list-section" class="lg:col-span-5 space-y-3 dashboard-intro dashboard-intro--list">
-        <div class="flex items-center justify-between px-1">
+      <div id="incident-list-section" class="list-panel space-y-3 dashboard-intro dashboard-intro--list">
+        <div id="panel-drag-handle" class="list-panel__head flex items-center justify-between gap-2 px-1">
           <h2 id="list-heading" class="text-base font-bold text-slate-700">
             Today's disruptions & incidents (<span id="visible-count">0</span>)
           </h2>
-          <span id="list-hint" class="text-xs text-slate-400">Select a card to choose next actions</span>
+          <div class="flex items-center gap-2">
+            <span id="list-hint" class="text-xs text-slate-400 hidden xl:inline">Select a card to choose next actions</span>
+            <button id="panel-float-btn" type="button" onclick="togglePanelFloat()" class="hidden lg:inline-flex min-h-9 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold" aria-pressed="false">⇱ Detach panel</button>
+          </div>
         </div>
 
-        <div id="incidents-list" class="space-y-3" aria-label="Disruption results">
+        <div id="incidents-list" class="list-panel__body space-y-3" aria-label="Disruption results">
           <!-- Cards rendered dynamically via JS -->
         </div>
+        <div id="panel-resize-grip" class="list-panel__grip" aria-hidden="true"></div>
       </div>
 
+      <!-- splitter: drag to change the width of the list next to the map -->
+      <div id="panel-splitter" class="list-splitter" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize list" title="Drag to resize"></div>
+
       <!-- RIGHT COLUMN: INTERACTIVE MAP & OFFICIAL SBB CONTEXT -->
-      <div id="map-section" class="map-section lg:col-span-7 dashboard-intro dashboard-intro--map">
+      <div id="map-section" class="map-section dashboard-intro dashboard-intro--map">
         <div id="map-canvas-panel" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <!-- Map Header -->
           <div class="px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-white">
@@ -262,7 +269,7 @@
           </div>
 
           <!-- Leaflet Map Container -->
-          <div class="relative h-[360px] sm:h-[440px] xl:h-[480px] w-full">
+          <div class="relative h-[360px] sm:h-[440px] lg:h-[540px] w-full">
             <div id="swiss-map" aria-label="Interactive disruption map. Matching disruption details are available in the incident list." aria-describedby="map-accessible-help"></div>
             <p id="map-accessible-help" class="sr-only">The map is a visual overview. Use the disruption list to read incident details and open the action assistant with a keyboard or screen reader.</p>
             <p id="map-note" role="status" aria-live="polite" class="hidden absolute top-3 left-3 z-20 max-w-[70%] px-2.5 py-1 rounded-lg bg-white/95 border border-slate-200 shadow text-[11px] font-semibold text-slate-600"></p>
@@ -453,5 +460,6 @@
   </aside>
 
   <script src="/static/js/app.js"></script>
+  <script src="/static/js/panel.js"></script>
 </body>
 </html>

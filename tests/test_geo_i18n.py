@@ -27,3 +27,22 @@ def test_forecast_labels():
     assert "14:30" in forecast_label("UNTIL_AT_LEAST", None, None, "14:30:00")["en"]
     assert forecast_label("UNTIL", None, None, None)["en"].startswith("End not yet known")  # missing time -> UNKNOWN
     assert is_uncertain("UNKNOWN") and is_uncertain("UNTIL_AT_LEAST") and not is_uncertain("UNTIL")
+
+
+def test_dataset_forecast_labels_carry_their_date_and_live_ones_do_not():
+    from datetime import datetime
+    from app.core.i18n import TZ, forecast_label
+    to = datetime(2026, 9, 1, 9, 0, tzinfo=TZ)
+    assert "09:00" in forecast_label("UNTIL_APPROX_DATE_TIME", None, to, None)["de"]
+    assert "01.09. 09:00" not in forecast_label("UNTIL_APPROX_DATE_TIME", None, to, None)["de"]
+    assert "01.09. 09:00" in forecast_label("UNTIL_APPROX_DATE_TIME", None, to, None, with_date=True)["de"]
+    assert "01.09. 18:30" in forecast_label("UNTIL_AT_LEAST", None, None, "18:30", with_date=True, ref=to)["en"]
+
+
+def test_timetable_link_carries_the_incident_time():
+    from datetime import datetime
+    from app.core.i18n import TZ, sbb_link
+    when = datetime(2026, 9, 1, 6, 40, tzinfo=TZ)
+    url = sbb_link("timetable", "de", "Bern", "Thun", when=when)["url"]
+    assert "datum=01.09.2026" in url and "zeit=06%3A40" in url and "von=Bern" in url
+    assert "datum" not in sbb_link("timetable", "de", "Bern", "Thun")["url"]

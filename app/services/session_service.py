@@ -17,36 +17,16 @@ from app.db.session import get_sessionmaker
 from app.schemas.dtos import AssistantTurnDto, ChatMessageDto, SessionDto, TripContext
 from app.services import incident_service as isvc
 from app.services.decision_engine import DecisionContext, DecisionResult, get_engine
+from app.core.resources import load_resource
 
 log = logging.getLogger("sessions")
 _bg_tasks: set[asyncio.Task] = set()  # keeps references so background refinements are not garbage collected
 
-ALERT_HEAD = {"en": "New SBB update", "de": "Neues SBB-Update", "fr": "Nouvelle info CFF", "it": "Nuovo aggiornamento FFS"}
-ALERT_TIP = {
-    "en": "My recommendation below now reflects this update.",
-    "de": "Meine Empfehlung berücksichtigt dieses Update.",
-    "fr": "Ma recommandation tient désormais compte de cette mise à jour.",
-    "it": "Il mio consiglio tiene ora conto di questo aggiornamento.",
-}
-ROUTE_MSG = {"en": "My route: {r}", "de": "Meine Strecke: {r}", "fr": "Mon trajet : {r}", "it": "Il mio percorso: {r}"}
-SCENARIO_PROMPTS = {
-    "missed_connection": {"en": "I might miss my connection due to this disruption. What should I do?",
-                          "de": "Ich könnte wegen dieser Störung meinen Anschluss verpassen. Was soll ich tun?",
-                          "fr": "Je risque de rater ma correspondance à cause de cette perturbation. Que faire ?",
-                          "it": "Rischio di perdere la coincidenza a causa di questo guasto. Cosa devo fare?"},
-    "detour_route": {"en": "How can I take a detour around the disrupted section?",
-                     "de": "Wie kann ich den gestörten Abschnitt umfahren?",
-                     "fr": "Comment contourner le tronçon perturbé ?",
-                     "it": "Come posso aggirare la tratta interrotta?"},
-    "refund_compensation": {"en": "Where do I apply for a ticket refund or delay compensation?",
-                            "de": "Wo beantrage ich eine Rückerstattung oder Entschädigung?",
-                            "fr": "Où demander un remboursement ou une indemnisation ?",
-                            "it": "Dove posso chiedere un rimborso o un indennizzo?"},
-    "status_timeline": {"en": "What happened and how reliable is the restoration forecast?",
-                        "de": "Was ist passiert und wie zuverlässig ist die Prognose?",
-                        "fr": "Que s’est-il passé et la prévision est-elle fiable ?",
-                        "it": "Cosa è successo e quanto è affidabile la previsione?"},
-}
+_R = load_resource("session_texts")
+ALERT_HEAD = _R["ALERT_HEAD"]
+ALERT_TIP = _R["ALERT_TIP"]
+ROUTE_MSG = _R["ROUTE_MSG"]
+SCENARIO_PROMPTS = _R["SCENARIO_PROMPTS"]
 
 
 def _now() -> datetime:
