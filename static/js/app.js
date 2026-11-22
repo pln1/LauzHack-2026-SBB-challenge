@@ -44,6 +44,12 @@
       FR: ['Accessibilité', 'Affichage et accessibilité', 'Texte agrandi', 'Contraste élevé', 'Les réglages sont enregistrés sur cet appareil. La navigation au clavier et avec un lecteur d’écran est toujours disponible.', 'Aller au contenu principal', 'Appuyez sur Entrée ou Espace pour sélectionner cet incident sur la carte.'],
       IT: ['Accessibilità', 'Visualizzazione e accessibilità', 'Testo più grande', 'Contrasto elevato', 'Le impostazioni vengono salvate su questo dispositivo. Il supporto per tastiera e lettori di schermo è sempre disponibile.', 'Vai al contenuto principale', 'Premi Invio o Spazio per selezionare questo guasto sulla mappa.']
     };
+    const POOR_VISION_LABELS = {
+      EN: ['Poor vision mode', 'Poor vision mode on', 'Turn on poor vision mode', 'Turn off poor vision mode'],
+      DE: ['Sehhilfemodus', 'Sehhilfemodus aktiv', 'Sehhilfemodus einschalten', 'Sehhilfemodus ausschalten'],
+      FR: ['Mode basse vision', 'Mode basse vision activé', 'Activer le mode basse vision', 'Désactiver le mode basse vision'],
+      IT: ['Modalità ipovisione', 'Modalità ipovisione attiva', 'Attiva modalità ipovisione', 'Disattiva modalità ipovisione']
+    };
     let accessibilityPrefs = { largeText: false, highContrast: false, darkTheme: false };
     try { accessibilityPrefs = { ...accessibilityPrefs, ...JSON.parse(localStorage.getItem(ACCESSIBILITY_PREFS_KEY) || '{}') }; } catch (_) {}
     let map = null, leaderGroup = null, mapLayersGroup = null, detourLayerGroup = null, searchTimer = null, pollTimer = null;
@@ -91,11 +97,6 @@
       await loadI18n();
       initDateFilter();
       applyAccessibilitySettings();
-      document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && !document.getElementById('accessibility-panel').classList.contains('hidden')) {
-          toggleAccessibilityPanel(false);
-        }
-      });
       initSwissMap();
       applyStaticTranslations();
       await loadDashboard(true);
@@ -105,11 +106,16 @@
 
     function applyAccessibilitySettings() {
       const root = document.documentElement;
-      root.classList.toggle('accessibility-large-text', !!accessibilityPrefs.largeText);
-      root.classList.toggle('accessibility-contrast', !!accessibilityPrefs.highContrast);
+      const poorVisionEnabled = !!(accessibilityPrefs.largeText || accessibilityPrefs.highContrast);
+      accessibilityPrefs.largeText = poorVisionEnabled;
+      accessibilityPrefs.highContrast = poorVisionEnabled;
+      root.classList.toggle('accessibility-large-text', poorVisionEnabled);
+      root.classList.toggle('accessibility-contrast', poorVisionEnabled);
       root.classList.toggle('dark-theme', !!accessibilityPrefs.darkTheme);
-      document.getElementById('accessibility-large-text').checked = !!accessibilityPrefs.largeText;
-      document.getElementById('accessibility-high-contrast').checked = !!accessibilityPrefs.highContrast;
+      const accessibilityButton = document.getElementById('accessibility-toggle');
+      accessibilityButton.setAttribute('aria-pressed', String(poorVisionEnabled));
+      accessibilityButton.classList.toggle('poor-vision-enabled', poorVisionEnabled);
+      updatePoorVisionButtonLabel();
       const themeButton = document.getElementById('theme-toggle');
       const darkEnabled = !!accessibilityPrefs.darkTheme;
       themeButton.setAttribute('aria-pressed', String(darkEnabled));
@@ -119,34 +125,34 @@
       document.getElementById('theme-icon-sun').classList.toggle('hidden', !darkEnabled);
     }
 
-    function setAccessibilityPreference(name, enabled) {
-      if (!(name in accessibilityPrefs)) return;
-      accessibilityPrefs[name] = !!enabled;
+    function togglePoorVisionMode() {
+      const enabled = !(accessibilityPrefs.largeText || accessibilityPrefs.highContrast);
+      accessibilityPrefs.largeText = enabled;
+      accessibilityPrefs.highContrast = enabled;
       try { localStorage.setItem(ACCESSIBILITY_PREFS_KEY, JSON.stringify(accessibilityPrefs)); } catch (_) {}
       applyAccessibilitySettings();
     }
 
-    function toggleDarkTheme() {
-      setAccessibilityPreference('darkTheme', !accessibilityPrefs.darkTheme);
+    function updatePoorVisionButtonLabel() {
+      const labels = POOR_VISION_LABELS[state.lang] || POOR_VISION_LABELS.EN;
+      const enabled = !!(accessibilityPrefs.largeText || accessibilityPrefs.highContrast);
+      const button = document.getElementById('accessibility-toggle');
+      const label = document.getElementById('accessibility-toggle-label');
+      if (!button || !label) return;
+      label.textContent = labels[enabled ? 1 : 0];
+      button.setAttribute('aria-label', labels[enabled ? 3 : 2]);
     }
 
-    function toggleAccessibilityPanel(forceOpen) {
-      const panel = document.getElementById('accessibility-panel');
-      const button = document.getElementById('accessibility-toggle');
-      const open = forceOpen === undefined ? panel.classList.contains('hidden') : forceOpen;
-      panel.classList.toggle('hidden', !open);
-      button.setAttribute('aria-expanded', String(open));
-      if (open) document.getElementById('accessibility-large-text').focus();
-      else button.focus();
+    function toggleDarkTheme() {
+      accessibilityPrefs.darkTheme = !accessibilityPrefs.darkTheme;
+      try { localStorage.setItem(ACCESSIBILITY_PREFS_KEY, JSON.stringify(accessibilityPrefs)); } catch (_) {}
+      applyAccessibilitySettings();
     }
 
     function applyAccessibilityLabels() {
       const labels = ACCESSIBILITY_LABELS[state.lang] || ACCESSIBILITY_LABELS.EN;
-      const toggle = document.getElementById('accessibility-toggle');
-      toggle.setAttribute('aria-label', labels[0]);
-      document.getElementById('accessibility-toggle-label').textContent = labels[0];
-      ['accessibility-heading', 'accessibility-large-label', 'accessibility-contrast-label', 'accessibility-help', 'skip-main']
-        .forEach((id, i) => { document.getElementById(id).textContent = labels[i + 1]; });
+      document.getElementById('skip-main').textContent = labels[5];
+      updatePoorVisionButtonLabel();
     }
 
     const SWISS_BOUNDS = [[45.80, 5.90], [47.85, 10.55]];

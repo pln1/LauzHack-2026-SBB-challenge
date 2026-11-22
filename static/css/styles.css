@@ -17,7 +17,9 @@
     html.accessibility-contrast #swiss-map .leaflet-tile { filter: grayscale(1) contrast(1.2); }
     html.accessibility-large-text #swiss-map .leaflet-control-layers { font-size: 1rem; }
     html.accessibility-large-text #swiss-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; font-size: 24px; }
-    .accessibility-panel { position: absolute; top: calc(100% + 10px); right: 0; z-index: 60; width: min(19rem, calc(100vw - 2rem)); }
+    #accessibility-toggle.poor-vision-enabled { background: #C60000; color: #fff; box-shadow: 0 0 0 3px rgba(198,0,0,.18); }
+    #accessibility-toggle.poor-vision-enabled:hover { background: #A90000; }
+    html.accessibility-contrast #accessibility-toggle { outline: 2px solid #111; outline-offset: 2px; }
     :root {
       --sbb-brand-red: #EB0000;
       --sbb-black: #000000;
@@ -39,11 +41,10 @@
       font-family: "SBB", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
     #app-header { border-top: 4px solid var(--sbb-brand-red); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-    .header-main-row { min-height: 76px; gap: 12px; }
-    .brand-block { flex: 1 1 auto; max-width: 48%; }
+    #app-header .header-main-row { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; min-height: 76px; gap: 8px 12px; }
+    .brand-block { flex: 0 1 220px; min-width: 160px; max-width: 220px; }
     .brand-copy, .header-title { min-width: 0; }
-    .header-controls { flex: 0 1 auto; max-width: 68%; overflow: visible; white-space: nowrap; }
-    .header-controls::-webkit-scrollbar { display: none; }
+    #app-header .header-controls { display: flex !important; flex: 1 1 820px; flex-wrap: wrap !important; width: auto; min-width: 0; max-width: none; overflow: visible !important; justify-content: flex-end; white-space: nowrap; }
     .header-control { flex-shrink: 0; white-space: nowrap; }
     .mode-live-label, #mode-live-label, #mode-demo-label { white-space: nowrap; }
     .accessibility-control { position: relative; }
@@ -210,8 +211,8 @@
       .header-subtitle { display: none !important; }
       #sim-update-label { display: none; }
       .simulate-control { padding-left: 10px; padding-right: 10px; }
-      .brand-block { max-width: 40%; }
-      .header-controls { gap: 8px; }
+      .brand-block { flex-basis: 190px; min-width: 150px; max-width: 190px; }
+      #app-header .header-controls { gap: 6px; }
     }
     @media (max-width: 960px) {
       .decision-badge { display: none !important; }
@@ -220,21 +221,17 @@
       .header-controls { gap: 6px; }
     }
     @media (max-width: 800px) {
-      .brand-block { flex: 0 0 250px; max-width: none; min-width: 0; }
+      #app-header .header-main-row { display: grid !important; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; gap: 8px; }
+      .brand-block { grid-column: 1; grid-row: 1; flex: 0 1 auto; width: 100%; max-width: none; min-width: 0; }
       .brand-block { gap: 8px; }
       .brand-block img { height: 28px; max-width: 52px; }
       .header-title { font-size: 13px; }
-      .header-controls { flex: 1 1 0; width: 0; max-width: none; min-width: 0; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #94A3B8 transparent; }
-      .header-controls::-webkit-scrollbar { display: block; height: 3px; }
-      .header-controls::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 9999px; }
+      #app-header .header-controls { grid-column: 1; grid-row: 2; justify-self: stretch; flex: 0 1 auto; width: 100%; max-width: 100%; min-width: 0; gap: 4px; }
       #mode-demo-label { font-size: 0; }
       #mode-demo-label::after { content: "Demo"; font-size: 11px; }
       .header-main-row { gap: 8px; padding-left: 12px; padding-right: 12px; }
-      .accessibility-panel { position: fixed; top: 4.5rem; right: 10px; }
     }
     @media (max-width: 760px) {
-      #accessibility-toggle { width: 44px; min-height: 44px; padding: 0; }
-      #accessibility-toggle-label { display: none; }
       .data-mode-control button { font-size: 11px; }
       .theme-toggle-btn { width: 40px; height: 40px; }
       .brand-block { gap: 8px; }
@@ -244,7 +241,7 @@
     @media (max-width: 640px) {
       .header-main-row { min-height: 64px; gap: 8px; padding-left: 10px; padding-right: 10px; }
       .brand-block { flex: 0 1 38vw; width: 38vw; max-width: 230px; min-width: 126px; }
-      .header-controls { flex: 1 1 0; width: 0; max-width: none; min-width: 0; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain; }
+      #app-header .header-controls { justify-self: stretch; flex: 0 1 auto; width: 100%; max-width: 100%; min-width: 0; gap: 6px; }
       .header-title { font-size: 12px; }
     }
     @media (max-width: 1023px) {
